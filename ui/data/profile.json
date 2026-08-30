@@ -1,0 +1,1769 @@
+{
+  "id": "h-bench",
+  "source_title": "Näthan Cabrol — profil optimisé",
+  "created_at": "2026-08-30T23:34:07.310855+00:00",
+  "version": "0.1.0",
+  "domains": {
+    "physical": {
+      "domain": "physical",
+      "title": "Physique",
+      "describe": "Caractéristiques du corps — fonctions corporelles (ICF b*), sensori-motricité, énergie, santé.",
+      "estimates": [
+        {
+          "construct_id": "phys_strength_endurance",
+          "construct_label": "Force & endurance physique",
+          "domain": "physical",
+          "value": 0.62,
+          "scale": "unit_interval",
+          "estimate_status": "estimated",
+          "strength_label": "Forte",
+          "epistemic_level": 3,
+          "uncertainty": {
+            "kind": "composite",
+            "total": 0.478,
+            "measurement_component": 0.37,
+            "evidence_component": 0.1,
+            "inference_component": 0.08
+          },
+          "evidence_ids": [
+            "obs-d3e6d9b8e08e",
+            "obs-5ffa968356ed",
+            "obs-1377a0efb99c"
+          ],
+          "alternatives": [],
+          "rationale": "Force & endurance physique : 3 observation(s) fusionnée(s) sur 3 ; incertitude totale 0.48.",
+          "window": null,
+          "context": {}
+        },
+        {
+          "construct_id": "phys_health_security",
+          "construct_label": "État de santé & sécurité",
+          "domain": "physical",
+          "value": 0.59,
+          "scale": "unit_interval",
+          "estimate_status": "estimated",
+          "strength_label": "Modérée",
+          "epistemic_level": 3,
+          "uncertainty": {
+            "kind": "composite",
+            "total": 0.478,
+            "measurement_component": 0.37,
+            "evidence_component": 0.1,
+            "inference_component": 0.08
+          },
+          "evidence_ids": [
+            "obs-e5c481efbb7e",
+            "obs-b4d1754834eb"
+          ],
+          "alternatives": [],
+          "rationale": "État de santé & sécurité : 2 observation(s) fusionnée(s) sur 2 ; incertitude totale 0.48.",
+          "window": null,
+          "context": {}
+        }
+      ],
+      "refusals": [],
+      "observations": [
+        {
+          "id": "obs-e5c481efbb7e",
+          "construct_ids": [
+            "phys_health_security"
+          ],
+          "content": "condition physique [intensité=0.68]",
+          "channel": "physiological",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.68,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:252:270",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.307219+00:00"
+          },
+          "epistemic_level": 1,
+          "source_span": "condition physique"
+        },
+        {
+          "id": "obs-d3e6d9b8e08e",
+          "construct_ids": [
+            "phys_strength_endurance"
+          ],
+          "content": "endurance [intensité=0.68]",
+          "channel": "physiological",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.68,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:285:294",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.308564+00:00"
+          },
+          "epistemic_level": 1,
+          "source_span": "endurance"
+        },
+        {
+          "id": "obs-5ffa968356ed",
+          "construct_ids": [
+            "phys_strength_endurance"
+          ],
+          "content": "physique [intensité=0.68]",
+          "channel": "physiological",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.68,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:262:270",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.308900+00:00"
+          },
+          "epistemic_level": 1,
+          "source_span": "physique"
+        },
+        {
+          "id": "obs-1377a0efb99c",
+          "construct_ids": [
+            "phys_strength_endurance"
+          ],
+          "content": "Cordiste",
+          "channel": "physiological",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.5,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:204:212",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.308954+00:00"
+          },
+          "epistemic_level": 1,
+          "source_span": "Cordiste"
+        },
+        {
+          "id": "obs-b4d1754834eb",
+          "construct_ids": [
+            "phys_health_security"
+          ],
+          "content": "sécurité",
+          "channel": "physiological",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.5,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:329:337",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.309007+00:00"
+          },
+          "epistemic_level": 1,
+          "source_span": "sécurité"
+        }
+      ]
+    },
+    "mental": {
+      "domain": "mental",
+      "title": "Mental",
+      "describe": "Processus cognitifs & affectifs — perception, attention, mémoire, langage, contrôle, métacognition, émotion, motivation.",
+      "estimates": [
+        {
+          "construct_id": "mental_reasoning",
+          "construct_label": "Raisonnement & résolution de problèmes",
+          "domain": "mental",
+          "value": 0.8,
+          "scale": "unit_interval",
+          "estimate_status": "estimated",
+          "strength_label": "Forte",
+          "epistemic_level": 2,
+          "uncertainty": {
+            "kind": "composite",
+            "total": 0.478,
+            "measurement_component": 0.37,
+            "evidence_component": 0.1,
+            "inference_component": 0.08
+          },
+          "evidence_ids": [
+            "obs-56cd1ca8dfa5",
+            "obs-dae72b0e9f80"
+          ],
+          "alternatives": [],
+          "rationale": "Raisonnement & résolution de problèmes : 2 observation(s) fusionnée(s) sur 2 ; incertitude totale 0.48.",
+          "window": null,
+          "context": {}
+        },
+        {
+          "construct_id": "mental_emotion_regulation",
+          "construct_label": "Régulation émotionnelle",
+          "domain": "mental",
+          "value": 0.38,
+          "scale": "unit_interval",
+          "estimate_status": "estimated",
+          "strength_label": "Faible",
+          "epistemic_level": 3,
+          "uncertainty": {
+            "kind": "composite",
+            "total": 0.478,
+            "measurement_component": 0.37,
+            "evidence_component": 0.1,
+            "inference_component": 0.08
+          },
+          "evidence_ids": [
+            "obs-a508e4546312"
+          ],
+          "alternatives": [],
+          "rationale": "Régulation émotionnelle : 1 observation(s) fusionnée(s) sur 1 ; incertitude totale 0.48.",
+          "window": null,
+          "context": {}
+        },
+        {
+          "construct_id": "mental_social_cognition",
+          "construct_label": "Cognition sociale & relationnelle",
+          "domain": "mental",
+          "value": 0.8,
+          "scale": "unit_interval",
+          "estimate_status": "estimated",
+          "strength_label": "Forte",
+          "epistemic_level": 3,
+          "uncertainty": {
+            "kind": "composite",
+            "total": 0.478,
+            "measurement_component": 0.37,
+            "evidence_component": 0.1,
+            "inference_component": 0.08
+          },
+          "evidence_ids": [
+            "obs-258749b1885d"
+          ],
+          "alternatives": [],
+          "rationale": "Cognition sociale & relationnelle : 1 observation(s) fusionnée(s) sur 1 ; incertitude totale 0.48.",
+          "window": null,
+          "context": {}
+        },
+        {
+          "construct_id": "mental_spatial_numeric",
+          "construct_label": "Cognition spatiale & numérique",
+          "domain": "mental",
+          "value": 0.68,
+          "scale": "unit_interval",
+          "estimate_status": "estimated",
+          "strength_label": "Forte",
+          "epistemic_level": 3,
+          "uncertainty": {
+            "kind": "composite",
+            "total": 0.478,
+            "measurement_component": 0.37,
+            "evidence_component": 0.1,
+            "inference_component": 0.08
+          },
+          "evidence_ids": [
+            "obs-d93b548fd0b7"
+          ],
+          "alternatives": [],
+          "rationale": "Cognition spatiale & numérique : 1 observation(s) fusionnée(s) sur 1 ; incertitude totale 0.48.",
+          "window": null,
+          "context": {}
+        }
+      ],
+      "refusals": [
+        {
+          "code": "CONTEXT_MISSING",
+          "construct_id": "mental_emotion",
+          "message": "Contexte requis manquant : somatic, social."
+        }
+      ],
+      "observations": [
+        {
+          "id": "obs-d93b548fd0b7",
+          "construct_ids": [
+            "mental_spatial_numeric"
+          ],
+          "content": "modélisation statistique [intensité=0.68]",
+          "channel": "physiological",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.68,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:178:202",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.307045+00:00"
+          },
+          "epistemic_level": 1,
+          "source_span": "modélisation statistique"
+        },
+        {
+          "id": "obs-a508e4546312",
+          "construct_ids": [
+            "mental_emotion_regulation"
+          ],
+          "content": "gère mal le stress [intensité=0.38]",
+          "channel": "subjective",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.38,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:411:429",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.307320+00:00"
+          },
+          "epistemic_level": 2,
+          "source_span": "gère mal le stress"
+        },
+        {
+          "id": "obs-56cd1ca8dfa5",
+          "construct_ids": [
+            "mental_reasoning"
+          ],
+          "content": "raisonnement [intensité=0.80]",
+          "channel": "subjective",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.8,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:68:80",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.307705+00:00"
+          },
+          "epistemic_level": 2,
+          "source_span": "raisonnement"
+        },
+        {
+          "id": "obs-258749b1885d",
+          "construct_ids": [
+            "mental_social_cognition"
+          ],
+          "content": "empathique [intensité=0.80]",
+          "channel": "subjective",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.8,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:479:489",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.308332+00:00"
+          },
+          "epistemic_level": 2,
+          "source_span": "empathique"
+        },
+        {
+          "id": "obs-dae72b0e9f80",
+          "construct_ids": [
+            "mental_reasoning"
+          ],
+          "content": "analyse [intensité=0.80]",
+          "channel": "subjective",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.8,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:54:61",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.309308+00:00"
+          },
+          "epistemic_level": 2,
+          "source_span": "analyse"
+        },
+        {
+          "id": "obs-82500432e156",
+          "construct_ids": [
+            "mental_emotion"
+          ],
+          "content": "stress [intensité=0.38]",
+          "channel": "subjective",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.38,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:423:429",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.309629+00:00"
+          },
+          "epistemic_level": 2,
+          "source_span": "stress"
+        }
+      ]
+    },
+    "action": {
+      "domain": "action",
+      "title": "Capacité d'action",
+      "describe": "Ce que la personne peut faire — savoir-faire, organisation, transmission, adaptation, impulsion.",
+      "estimates": [
+        {
+          "construct_id": "act_savoir_faire",
+          "construct_label": "Savoir-faire technique",
+          "domain": "action",
+          "value": 0.705,
+          "scale": "unit_interval",
+          "estimate_status": "estimated",
+          "strength_label": "Forte",
+          "epistemic_level": 2,
+          "uncertainty": {
+            "kind": "composite",
+            "total": 0.496,
+            "measurement_component": 0.37,
+            "evidence_component": 0.13,
+            "inference_component": 0.08
+          },
+          "evidence_ids": [
+            "obs-03dd16a2ed2a",
+            "obs-a4fdc897df23",
+            "obs-6124800512c1",
+            "obs-189b2f3fe06e",
+            "obs-bd2f26f304f6"
+          ],
+          "alternatives": [],
+          "rationale": "Savoir-faire technique : 5 observation(s) fusionnée(s) sur 5 ; incertitude totale 0.50.",
+          "window": null,
+          "context": {}
+        },
+        {
+          "construct_id": "act_communicate_teach",
+          "construct_label": "Transmission & communication",
+          "domain": "action",
+          "value": 0.8,
+          "scale": "unit_interval",
+          "estimate_status": "estimated",
+          "strength_label": "Forte",
+          "epistemic_level": 3,
+          "uncertainty": {
+            "kind": "composite",
+            "total": 0.478,
+            "measurement_component": 0.37,
+            "evidence_component": 0.1,
+            "inference_component": 0.08
+          },
+          "evidence_ids": [
+            "obs-186ef61dd862"
+          ],
+          "alternatives": [],
+          "rationale": "Transmission & communication : 1 observation(s) fusionnée(s) sur 1 ; incertitude totale 0.48.",
+          "window": null,
+          "context": {}
+        },
+        {
+          "construct_id": "act_leadership",
+          "construct_label": "Impulsion & conduite collective",
+          "domain": "action",
+          "value": 0.5,
+          "scale": "unit_interval",
+          "estimate_status": "estimated",
+          "strength_label": "Modérée",
+          "epistemic_level": 3,
+          "uncertainty": {
+            "kind": "composite",
+            "total": 0.478,
+            "measurement_component": 0.37,
+            "evidence_component": 0.1,
+            "inference_component": 0.08
+          },
+          "evidence_ids": [
+            "obs-43fe3371018c"
+          ],
+          "alternatives": [],
+          "rationale": "Impulsion & conduite collective : 1 observation(s) fusionnée(s) sur 1 ; incertitude totale 0.48.",
+          "window": null,
+          "context": {}
+        }
+      ],
+      "refusals": [],
+      "observations": [
+        {
+          "id": "obs-03dd16a2ed2a",
+          "construct_ids": [
+            "act_savoir_faire"
+          ],
+          "content": "programmation [intensité=0.68]",
+          "channel": "subjective",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.68,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:151:164",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.307557+00:00"
+          },
+          "epistemic_level": 2,
+          "source_span": "programmation"
+        },
+        {
+          "id": "obs-a4fdc897df23",
+          "construct_ids": [
+            "act_savoir_faire"
+          ],
+          "content": "modélisation [intensité=0.68]",
+          "channel": "physiological",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.68,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:178:190",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.307840+00:00"
+          },
+          "epistemic_level": 1,
+          "source_span": "modélisation"
+        },
+        {
+          "id": "obs-6124800512c1",
+          "construct_ids": [
+            "act_savoir_faire"
+          ],
+          "content": "statistique [intensité=0.68]",
+          "channel": "physiological",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.68,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:191:202",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.308069+00:00"
+          },
+          "epistemic_level": 1,
+          "source_span": "statistique"
+        },
+        {
+          "id": "obs-186ef61dd862",
+          "construct_ids": [
+            "act_communicate_teach"
+          ],
+          "content": "transmettre [intensité=0.80]",
+          "channel": "subjective",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.8,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:498:509",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.308152+00:00"
+          },
+          "epistemic_level": 2,
+          "source_span": "transmettre"
+        },
+        {
+          "id": "obs-189b2f3fe06e",
+          "construct_ids": [
+            "act_savoir_faire"
+          ],
+          "content": "compétence",
+          "channel": "subjective",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.5,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:372:382",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.308422+00:00"
+          },
+          "epistemic_level": 2,
+          "source_span": "compétence"
+        },
+        {
+          "id": "obs-bd2f26f304f6",
+          "construct_ids": [
+            "act_savoir_faire"
+          ],
+          "content": "Python [intensité=0.68]",
+          "channel": "subjective",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.68,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:165:171",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.309923+00:00"
+          },
+          "epistemic_level": 2,
+          "source_span": "Python"
+        },
+        {
+          "id": "obs-43fe3371018c",
+          "construct_ids": [
+            "act_leadership"
+          ],
+          "content": "équipe",
+          "channel": "subjective",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.5,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:107:113",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.310021+00:00"
+          },
+          "epistemic_level": 2,
+          "source_span": "équipe"
+        }
+      ]
+    },
+    "dynamics": {
+      "domain": "dynamics",
+      "title": "Fonctionnement",
+      "describe": "Dynamique dans le temps — apprentissage, rétention/oubli, transfert, charge, état vs trait.",
+      "estimates": [
+        {
+          "construct_id": "dyn_learning_rate",
+          "construct_label": "Vitesse d'apprentissage",
+          "domain": "dynamics",
+          "value": 0.5,
+          "scale": "unit_interval",
+          "estimate_status": "estimated",
+          "strength_label": "Modérée",
+          "epistemic_level": 3,
+          "uncertainty": {
+            "kind": "composite",
+            "total": 0.478,
+            "measurement_component": 0.37,
+            "evidence_component": 0.1,
+            "inference_component": 0.08
+          },
+          "evidence_ids": [
+            "obs-7a3b3101eb4b"
+          ],
+          "alternatives": [],
+          "rationale": "Vitesse d'apprentissage : 1 observation(s) fusionnée(s) sur 1 ; incertitude totale 0.48.",
+          "window": null,
+          "context": {}
+        }
+      ],
+      "refusals": [],
+      "observations": [
+        {
+          "id": "obs-7a3b3101eb4b",
+          "construct_ids": [
+            "dyn_learning_rate"
+          ],
+          "content": "apprend vite",
+          "channel": "physiological",
+          "alignment": "close",
+          "raw_value": null,
+          "normalized_value": 0.5,
+          "confidence": 0.75,
+          "missingness": "",
+          "quality_flag": "ok",
+          "window": null,
+          "context": {},
+          "provenance": {
+            "agent": "language-decoder",
+            "agent_kind": "software",
+            "activity_type": "DecodeActivity",
+            "source_document": "narrative",
+            "source_location": "narrative:342:354",
+            "source_page": null,
+            "software_version": "0.1.0",
+            "timestamp": "2026-08-30T23:34:07.307936+00:00"
+          },
+          "epistemic_level": 1,
+          "source_span": "apprend vite"
+        }
+      ]
+    }
+  },
+  "functioning": [
+    {
+      "construct_id": "phys_strength_endurance",
+      "target_code": "b730",
+      "kind": "body_function",
+      "status": "HYPOTHESIS",
+      "value": 0.62,
+      "about": "Projection de Force & endurance physique vers ICF b730 — hypothèse, pas déduction.",
+      "does_not_imply": [
+        "diagnostic",
+        "restriction de participation",
+        "besoin de traitement",
+        "décision scolaire, médicale ou managériale",
+        "jugement clinique"
+      ]
+    },
+    {
+      "construct_id": "mental_social_cognition",
+      "target_code": "d7",
+      "kind": "activity_hypothesis",
+      "status": "HYPOTHESIS",
+      "value": 0.8,
+      "about": "Projection de Cognition sociale & relationnelle vers ICF d7 — hypothèse, pas déduction.",
+      "does_not_imply": [
+        "diagnostic",
+        "restriction de participation",
+        "besoin de traitement",
+        "décision scolaire, médicale ou managériale",
+        "jugement clinique"
+      ]
+    },
+    {
+      "construct_id": "act_savoir_faire",
+      "target_code": "d2",
+      "kind": "activity_hypothesis",
+      "status": "HYPOTHESIS",
+      "value": 0.705,
+      "about": "Projection de Savoir-faire technique vers ICF d2 — hypothèse, pas déduction.",
+      "does_not_imply": [
+        "diagnostic",
+        "restriction de participation",
+        "besoin de traitement",
+        "décision scolaire, médicale ou managériale",
+        "jugement clinique"
+      ]
+    },
+    {
+      "construct_id": "act_communicate_teach",
+      "target_code": "d3",
+      "kind": "activity_hypothesis",
+      "status": "HYPOTHESIS",
+      "value": 0.8,
+      "about": "Projection de Transmission & communication vers ICF d3 — hypothèse, pas déduction.",
+      "does_not_imply": [
+        "diagnostic",
+        "restriction de participation",
+        "besoin de traitement",
+        "décision scolaire, médicale ou managériale",
+        "jugement clinique"
+      ]
+    },
+    {
+      "construct_id": "act_leadership",
+      "target_code": "d7",
+      "kind": "activity_hypothesis",
+      "status": "HYPOTHESIS",
+      "value": 0.5,
+      "about": "Projection de Impulsion & conduite collective vers ICF d7 — hypothèse, pas déduction.",
+      "does_not_imply": [
+        "diagnostic",
+        "restriction de participation",
+        "besoin de traitement",
+        "décision scolaire, médicale ou managériale",
+        "jugement clinique"
+      ]
+    }
+  ],
+  "dynamics": {
+    "current_year": 2026,
+    "retentions": [
+      {
+        "construct_id": "mental_spatial_numeric",
+        "base_level": 0.68,
+        "last_practiced_year": 2026,
+        "half_life_years": 4,
+        "current_year": 2026,
+        "years_inactive": 0,
+        "vitality": 0.68,
+        "availability_label": "En veille active",
+        "retention_floor": 0.238,
+        "reactivation_effort": {
+          "days_to_reactivate": 3,
+          "label": "Rapide (2 à 5 jours)",
+          "advice": "Un court projet pratique réactive les automatismes."
+        },
+        "transferability": {
+          "score": 0.5,
+          "label": "Partiellement transposable — nécessite un pont"
+        }
+      },
+      {
+        "construct_id": "phys_health_security",
+        "base_level": 0.68,
+        "last_practiced_year": 2026,
+        "half_life_years": 4,
+        "current_year": 2026,
+        "years_inactive": 0,
+        "vitality": 0.68,
+        "availability_label": "En veille active",
+        "retention_floor": 0.238,
+        "reactivation_effort": {
+          "days_to_reactivate": 3,
+          "label": "Rapide (2 à 5 jours)",
+          "advice": "Un court projet pratique réactive les automatismes."
+        },
+        "transferability": {
+          "score": 0.5,
+          "label": "Partiellement transposable — nécessite un pont"
+        }
+      },
+      {
+        "construct_id": "mental_emotion_regulation",
+        "base_level": 0.4,
+        "last_practiced_year": 2026,
+        "half_life_years": 4,
+        "current_year": 2026,
+        "years_inactive": 0,
+        "vitality": 0.4,
+        "availability_label": "Dormante (cristallisée)",
+        "retention_floor": 0.14,
+        "reactivation_effort": {
+          "days_to_reactivate": 10,
+          "label": "Moyen (1 à 2 semaines)",
+          "advice": "Les bases restent en mémoire cristallisée ; une à deux semaines suffisent."
+        },
+        "transferability": {
+          "score": 0.5,
+          "label": "Partiellement transposable — nécessite un pont"
+        }
+      },
+      {
+        "construct_id": "act_savoir_faire",
+        "base_level": 0.68,
+        "last_practiced_year": 2026,
+        "half_life_years": 6,
+        "current_year": 2026,
+        "years_inactive": 0,
+        "vitality": 0.68,
+        "availability_label": "En veille active",
+        "retention_floor": 0.238,
+        "reactivation_effort": {
+          "days_to_reactivate": 3,
+          "label": "Rapide (2 à 5 jours)",
+          "advice": "Un court projet pratique réactive les automatismes."
+        },
+        "transferability": {
+          "score": 0.5,
+          "label": "Partiellement transposable — nécessite un pont"
+        }
+      },
+      {
+        "construct_id": "mental_reasoning",
+        "base_level": 0.8,
+        "last_practiced_year": 2026,
+        "half_life_years": 2,
+        "current_year": 2026,
+        "years_inactive": 0,
+        "vitality": 0.8,
+        "availability_label": "Disponibilité immédiate",
+        "retention_floor": 0.28,
+        "reactivation_effort": {
+          "days_to_reactivate": 1,
+          "label": "Immédiat (< 24h)",
+          "advice": "Une mise en contexte suffit pour mobiliser le potentiel."
+        },
+        "transferability": {
+          "score": 0.5,
+          "label": "Partiellement transposable — nécessite un pont"
+        }
+      },
+      {
+        "construct_id": "dyn_learning_rate",
+        "base_level": 0.5,
+        "last_practiced_year": 2026,
+        "half_life_years": 4,
+        "current_year": 2026,
+        "years_inactive": 0,
+        "vitality": 0.5,
+        "availability_label": "Dormante (cristallisée)",
+        "retention_floor": 0.175,
+        "reactivation_effort": {
+          "days_to_reactivate": 10,
+          "label": "Moyen (1 à 2 semaines)",
+          "advice": "Les bases restent en mémoire cristallisée ; une à deux semaines suffisent."
+        },
+        "transferability": {
+          "score": 0.5,
+          "label": "Partiellement transposable — nécessite un pont"
+        }
+      },
+      {
+        "construct_id": "act_communicate_teach",
+        "base_level": 0.8,
+        "last_practiced_year": 2026,
+        "half_life_years": 6,
+        "current_year": 2026,
+        "years_inactive": 0,
+        "vitality": 0.8,
+        "availability_label": "Disponibilité immédiate",
+        "retention_floor": 0.28,
+        "reactivation_effort": {
+          "days_to_reactivate": 1,
+          "label": "Immédiat (< 24h)",
+          "advice": "Une mise en contexte suffit pour mobiliser le potentiel."
+        },
+        "transferability": {
+          "score": 0.5,
+          "label": "Partiellement transposable — nécessite un pont"
+        }
+      },
+      {
+        "construct_id": "mental_social_cognition",
+        "base_level": 0.8,
+        "last_practiced_year": 2026,
+        "half_life_years": 4,
+        "current_year": 2026,
+        "years_inactive": 0,
+        "vitality": 0.8,
+        "availability_label": "Disponibilité immédiate",
+        "retention_floor": 0.28,
+        "reactivation_effort": {
+          "days_to_reactivate": 1,
+          "label": "Immédiat (< 24h)",
+          "advice": "Une mise en contexte suffit pour mobiliser le potentiel."
+        },
+        "transferability": {
+          "score": 0.5,
+          "label": "Partiellement transposable — nécessite un pont"
+        }
+      },
+      {
+        "construct_id": "phys_strength_endurance",
+        "base_level": 0.68,
+        "last_practiced_year": 2026,
+        "half_life_years": 4,
+        "current_year": 2026,
+        "years_inactive": 0,
+        "vitality": 0.68,
+        "availability_label": "En veille active",
+        "retention_floor": 0.238,
+        "reactivation_effort": {
+          "days_to_reactivate": 3,
+          "label": "Rapide (2 à 5 jours)",
+          "advice": "Un court projet pratique réactive les automatismes."
+        },
+        "transferability": {
+          "score": 0.5,
+          "label": "Partiellement transposable — nécessite un pont"
+        }
+      },
+      {
+        "construct_id": "mental_emotion",
+        "base_level": 0.4,
+        "last_practiced_year": 2026,
+        "half_life_years": 2,
+        "current_year": 2026,
+        "years_inactive": 0,
+        "vitality": 0.4,
+        "availability_label": "Dormante (cristallisée)",
+        "retention_floor": 0.14,
+        "reactivation_effort": {
+          "days_to_reactivate": 10,
+          "label": "Moyen (1 à 2 semaines)",
+          "advice": "Les bases restent en mémoire cristallisée ; une à deux semaines suffisent."
+        },
+        "transferability": {
+          "score": 0.5,
+          "label": "Partiellement transposable — nécessite un pont"
+        }
+      },
+      {
+        "construct_id": "act_leadership",
+        "base_level": 0.5,
+        "last_practiced_year": 2026,
+        "half_life_years": 6,
+        "current_year": 2026,
+        "years_inactive": 0,
+        "vitality": 0.5,
+        "availability_label": "Dormante (cristallisée)",
+        "retention_floor": 0.175,
+        "reactivation_effort": {
+          "days_to_reactivate": 10,
+          "label": "Moyen (1 à 2 semaines)",
+          "advice": "Les bases restent en mémoire cristallisée ; une à deux semaines suffisent."
+        },
+        "transferability": {
+          "score": 0.5,
+          "label": "Partiellement transposable — nécessite un pont"
+        }
+      }
+    ],
+    "model": "Ebbinghaus forgetting curve + power-law reactivation; see language_decoder.dynamics"
+  },
+  "refusals": [
+    {
+      "code": "CONTEXT_MISSING",
+      "construct_id": "mental_emotion",
+      "message": "Contexte requis manquant : somatic, social."
+    }
+  ],
+  "epistemic_summary": {
+    "total_estimates": 10,
+    "total_refusals": 1,
+    "levels": {
+      "3": 8,
+      "2": 2
+    },
+    "max_level": 3,
+    "level5_present": false,
+    "note": "Niveau 5 (conclusion psychologique) n'est jamais produit automatiquement."
+  },
+  "ui_hints": {
+    "physical": {
+      "estimate_count": 2,
+      "refusal_count": 0,
+      "average_value": 0.605,
+      "representation": "cards",
+      "top_strengths": [
+        {
+          "label": "Force & endurance physique",
+          "value": 0.62,
+          "strength": "Forte"
+        },
+        {
+          "label": "État de santé & sécurité",
+          "value": 0.59,
+          "strength": "Modérée"
+        }
+      ]
+    },
+    "mental": {
+      "estimate_count": 4,
+      "refusal_count": 1,
+      "average_value": 0.665,
+      "representation": "constellation",
+      "top_strengths": [
+        {
+          "label": "Raisonnement & résolution de problèmes",
+          "value": 0.8,
+          "strength": "Forte"
+        },
+        {
+          "label": "Cognition sociale & relationnelle",
+          "value": 0.8,
+          "strength": "Forte"
+        },
+        {
+          "label": "Cognition spatiale & numérique",
+          "value": 0.68,
+          "strength": "Forte"
+        },
+        {
+          "label": "Régulation émotionnelle",
+          "value": 0.38,
+          "strength": "Faible"
+        }
+      ]
+    },
+    "action": {
+      "estimate_count": 3,
+      "refusal_count": 0,
+      "average_value": 0.668,
+      "representation": "radar",
+      "top_strengths": [
+        {
+          "label": "Transmission & communication",
+          "value": 0.8,
+          "strength": "Forte"
+        },
+        {
+          "label": "Savoir-faire technique",
+          "value": 0.705,
+          "strength": "Forte"
+        },
+        {
+          "label": "Impulsion & conduite collective",
+          "value": 0.5,
+          "strength": "Modérée"
+        }
+      ]
+    },
+    "dynamics": {
+      "representation": "radar",
+      "count": 11
+    },
+    "functioning": {
+      "representation": "list",
+      "count": 5
+    }
+  },
+  "observations": [
+    {
+      "id": "obs-d93b548fd0b7",
+      "construct_ids": [
+        "mental_spatial_numeric"
+      ],
+      "content": "modélisation statistique [intensité=0.68]",
+      "channel": "physiological",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.68,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:178:202",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.307045+00:00"
+      },
+      "epistemic_level": 1,
+      "source_span": "modélisation statistique"
+    },
+    {
+      "id": "obs-e5c481efbb7e",
+      "construct_ids": [
+        "phys_health_security"
+      ],
+      "content": "condition physique [intensité=0.68]",
+      "channel": "physiological",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.68,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:252:270",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.307219+00:00"
+      },
+      "epistemic_level": 1,
+      "source_span": "condition physique"
+    },
+    {
+      "id": "obs-a508e4546312",
+      "construct_ids": [
+        "mental_emotion_regulation"
+      ],
+      "content": "gère mal le stress [intensité=0.38]",
+      "channel": "subjective",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.38,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:411:429",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.307320+00:00"
+      },
+      "epistemic_level": 2,
+      "source_span": "gère mal le stress"
+    },
+    {
+      "id": "obs-03dd16a2ed2a",
+      "construct_ids": [
+        "act_savoir_faire"
+      ],
+      "content": "programmation [intensité=0.68]",
+      "channel": "subjective",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.68,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:151:164",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.307557+00:00"
+      },
+      "epistemic_level": 2,
+      "source_span": "programmation"
+    },
+    {
+      "id": "obs-56cd1ca8dfa5",
+      "construct_ids": [
+        "mental_reasoning"
+      ],
+      "content": "raisonnement [intensité=0.80]",
+      "channel": "subjective",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.8,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:68:80",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.307705+00:00"
+      },
+      "epistemic_level": 2,
+      "source_span": "raisonnement"
+    },
+    {
+      "id": "obs-a4fdc897df23",
+      "construct_ids": [
+        "act_savoir_faire"
+      ],
+      "content": "modélisation [intensité=0.68]",
+      "channel": "physiological",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.68,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:178:190",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.307840+00:00"
+      },
+      "epistemic_level": 1,
+      "source_span": "modélisation"
+    },
+    {
+      "id": "obs-7a3b3101eb4b",
+      "construct_ids": [
+        "dyn_learning_rate"
+      ],
+      "content": "apprend vite",
+      "channel": "physiological",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.5,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:342:354",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.307936+00:00"
+      },
+      "epistemic_level": 1,
+      "source_span": "apprend vite"
+    },
+    {
+      "id": "obs-6124800512c1",
+      "construct_ids": [
+        "act_savoir_faire"
+      ],
+      "content": "statistique [intensité=0.68]",
+      "channel": "physiological",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.68,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:191:202",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.308069+00:00"
+      },
+      "epistemic_level": 1,
+      "source_span": "statistique"
+    },
+    {
+      "id": "obs-186ef61dd862",
+      "construct_ids": [
+        "act_communicate_teach"
+      ],
+      "content": "transmettre [intensité=0.80]",
+      "channel": "subjective",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.8,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:498:509",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.308152+00:00"
+      },
+      "epistemic_level": 2,
+      "source_span": "transmettre"
+    },
+    {
+      "id": "obs-258749b1885d",
+      "construct_ids": [
+        "mental_social_cognition"
+      ],
+      "content": "empathique [intensité=0.80]",
+      "channel": "subjective",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.8,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:479:489",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.308332+00:00"
+      },
+      "epistemic_level": 2,
+      "source_span": "empathique"
+    },
+    {
+      "id": "obs-189b2f3fe06e",
+      "construct_ids": [
+        "act_savoir_faire"
+      ],
+      "content": "compétence",
+      "channel": "subjective",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.5,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:372:382",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.308422+00:00"
+      },
+      "epistemic_level": 2,
+      "source_span": "compétence"
+    },
+    {
+      "id": "obs-d3e6d9b8e08e",
+      "construct_ids": [
+        "phys_strength_endurance"
+      ],
+      "content": "endurance [intensité=0.68]",
+      "channel": "physiological",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.68,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:285:294",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.308564+00:00"
+      },
+      "epistemic_level": 1,
+      "source_span": "endurance"
+    },
+    {
+      "id": "obs-5ffa968356ed",
+      "construct_ids": [
+        "phys_strength_endurance"
+      ],
+      "content": "physique [intensité=0.68]",
+      "channel": "physiological",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.68,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:262:270",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.308900+00:00"
+      },
+      "epistemic_level": 1,
+      "source_span": "physique"
+    },
+    {
+      "id": "obs-1377a0efb99c",
+      "construct_ids": [
+        "phys_strength_endurance"
+      ],
+      "content": "Cordiste",
+      "channel": "physiological",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.5,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:204:212",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.308954+00:00"
+      },
+      "epistemic_level": 1,
+      "source_span": "Cordiste"
+    },
+    {
+      "id": "obs-b4d1754834eb",
+      "construct_ids": [
+        "phys_health_security"
+      ],
+      "content": "sécurité",
+      "channel": "physiological",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.5,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:329:337",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.309007+00:00"
+      },
+      "epistemic_level": 1,
+      "source_span": "sécurité"
+    },
+    {
+      "id": "obs-dae72b0e9f80",
+      "construct_ids": [
+        "mental_reasoning"
+      ],
+      "content": "analyse [intensité=0.80]",
+      "channel": "subjective",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.8,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:54:61",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.309308+00:00"
+      },
+      "epistemic_level": 2,
+      "source_span": "analyse"
+    },
+    {
+      "id": "obs-82500432e156",
+      "construct_ids": [
+        "mental_emotion"
+      ],
+      "content": "stress [intensité=0.38]",
+      "channel": "subjective",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.38,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:423:429",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.309629+00:00"
+      },
+      "epistemic_level": 2,
+      "source_span": "stress"
+    },
+    {
+      "id": "obs-bd2f26f304f6",
+      "construct_ids": [
+        "act_savoir_faire"
+      ],
+      "content": "Python [intensité=0.68]",
+      "channel": "subjective",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.68,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:165:171",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.309923+00:00"
+      },
+      "epistemic_level": 2,
+      "source_span": "Python"
+    },
+    {
+      "id": "obs-43fe3371018c",
+      "construct_ids": [
+        "act_leadership"
+      ],
+      "content": "équipe",
+      "channel": "subjective",
+      "alignment": "close",
+      "raw_value": null,
+      "normalized_value": 0.5,
+      "confidence": 0.75,
+      "missingness": "",
+      "quality_flag": "ok",
+      "window": null,
+      "context": {},
+      "provenance": {
+        "agent": "language-decoder",
+        "agent_kind": "software",
+        "activity_type": "DecodeActivity",
+        "source_document": "narrative",
+        "source_location": "narrative:107:113",
+        "source_page": null,
+        "software_version": "0.1.0",
+        "timestamp": "2026-08-30T23:34:07.310021+00:00"
+      },
+      "epistemic_level": 2,
+      "source_span": "équipe"
+    }
+  ],
+  "notes": []
+}

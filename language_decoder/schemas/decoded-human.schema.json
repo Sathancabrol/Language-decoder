@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Sathancabrol/Language-decoder/schemas/decoded-human.schema.json",
+  "title": "DecodedHuman",
+  "description": "Contrat interface du moteur Language-decoder : profil humain décodé (physique, mental, capacité d'action, fonctionnement) avec provenance et garde-fou épistémique.",
+  "type": "object",
+  "required": ["id", "source_title", "version", "domains", "functioning", "dynamics", "refusals", "epistemic_summary", "ui_hints", "observations", "notes"],
+  "properties": {
+    "id": { "type": "string" },
+    "source_title": { "type": "string" },
+    "created_at": { "type": "string" },
+    "version": { "type": "string" },
+    "domains": { "type": "object" },
+    "functioning": { "type": "array", "items": { "$ref": "#/definitions/functionalProjection" } },
+    "dynamics": { "type": "object" },
+    "refusals": { "type": "array", "items": { "$ref": "#/definitions/refusal" } },
+    "epistemic_summary": { "type": "object" },
+    "ui_hints": { "type": "object" },
+    "observations": { "type": "array", "items": { "$ref": "#/definitions/observation" } },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "definitions": {
+    "observation": {
+      "type": "object",
+      "required": ["id", "construct_ids", "channel", "alignment", "epistemic_level"],
+      "properties": {
+        "id": { "type": "string" },
+        "construct_ids": { "type": "array", "items": { "type": "string" } },
+        "content": { "type": "string" },
+        "channel": { "type": "string" },
+        "alignment": { "enum": ["exact", "close", "related", "none"] },
+        "raw_value": { "type": ["number", "null"] },
+        "normalized_value": { "type": ["number", "null"] },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "missingness": { "enum": ["", "not_collected", "collected_unusable", "refused_by_person"] },
+        "quality_flag": { "enum": ["ok", "degraded", "unusable"] },
+        "window": { "type": ["object", "null"] },
+        "context": { "type": "object" },
+        "provenance": { "type": ["object", "null"] },
+        "epistemic_level": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "source_span": { "type": "string" }
+      }
+    },
+    "refusal": {
+      "type": "object",
+      "required": ["code", "construct_id", "message"],
+      "properties": {
+        "code": { "enum": ["NO_CONSTRUCT", "NO_EVIDENCE", "WINDOW_UNDEFINED", "CONTEXT_MISSING", "UNRESOLVED_ALTERNATIVES", "MISALIGNED_MEASURE", "PROVENANCE_BROKEN"] },
+        "construct_id": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    },
+    "functionalProjection": {
+      "type": "object",
+      "required": ["construct_id", "target_code", "kind", "status"],
+      "properties": {
+        "construct_id": { "type": "string" },
+        "target_code": { "type": "string" },
+        "kind": { "type": "string" },
+        "status": { "const": "HYPOTHESIS" },
+        "value": { "type": ["number", "null"] },
+        "about": { "type": "string" },
+        "does_not_imply": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

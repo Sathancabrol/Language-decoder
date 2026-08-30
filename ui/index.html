@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Language Decoder — Profil humain décodé</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div class="wordmark">LANGUAGE<span>·</span>DECODER</div>
+      <div class="breadcrumb">décodage de l'humain · <b id="source-title">—</b></div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-view="overview">Vue d'ensemble</button>
+      <button class="tab" data-view="physical">Physique</button>
+      <button class="tab" data-view="mental">Mental</button>
+      <button class="tab" data-view="action">Capacité d'action</button>
+      <button class="tab" data-view="dynamics">Fonctionnement</button>
+      <button class="tab" data-view="trace">Traçabilité</button>
+    </nav>
+
+    <main id="content" class="content"></main>
+
+    <section class="decode-box">
+      <div class="decode-title">Décoder un humain</div>
+      <textarea id="decode-input" rows="3"
+        placeholder="Collez un récit, un CV, une description de parcours ou d'expérience…">Ingénieur de recherche avec une très forte capacité d'analyse et de raisonnement. Il organise et anime des équipes pluridisciplinaires. Cordiste expérimenté, il possède une excellente condition physique et une grande endurance. Il apprend vite et transpose ses compétences d'un domaine à l'autre. Il gère mal le stress en situation de forte pression.</textarea>
+      <div class="decode-actions">
+        <input id="decode-title" type="text" value="Décodage humain" placeholder="Titre du décodage">
+        <input id="decode-person" type="text" value="h-001" placeholder="Identifiant">
+        <button id="decode-btn">Décoder</button>
+      </div>
+      <div class="decode-status" id="decode-status"></div>
+    </section>
+
+    <footer>
+      <span>Moteur épistémique — level 5 (conclusion psychologique) jamais produit automatiquement.</span>
+      <span id="meta"></span>
+    </footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
