@@ -3,55 +3,84 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Cognitorium Representation Engine — visualisation temps réel, vues coordonnées, incertitude visible. Pas un générateur de code, pas un diagnostic.">
+  <meta name="description" content="Cognitorium Representation Engine — interface de visualisation live, chrome issu des illustrations Cognitorium.">
   <title>Cognitorium — Representation Engine</title>
   <link rel="stylesheet" href="css/dashboard.css">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' rx='4' fill='none' stroke='%232dd4bf' stroke-width='2'/%3E%3Cpath d='M6 18h4l2-6 3 12 3-8 2 2h6' fill='none' stroke='%232dd4bf' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%2322d3ee' stroke-width='2'/%3E%3Cpath d='M10 16h3l2-5 3 10 2-5h2' fill='none' stroke='%2322d3ee' stroke-width='2'/%3E%3C/svg%3E">
 </head>
 <body>
   <a class="skip" href="#stage">Aller à la scène</a>
-
   <div class="app">
-    <header class="bar">
-      <div class="brand">
-        <svg viewBox="0 0 32 32" aria-hidden="true">
-          <rect x="3" y="3" width="26" height="26" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
-          <path d="M6 18h4l2-6 3 12 3-8 2 2h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-        </svg>
+    <aside class="side">
+      <div class="logo">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 16h3l2-5 3 10 2-5h2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
         <div>
           <strong>COGNITORIUM</strong>
-          <b>Representation Engine</b>
+          <b>Representation</b>
         </div>
       </div>
-      <div class="live" id="live" data-on="true"><i></i> DIRECT · simulé</div>
-      <div class="clock" id="clock" aria-live="off">T0 + 00:00</div>
-      <div class="ctx" id="ctx">Résolution d’un problème · bureau · sim-001</div>
-      <div class="transport">
-        <button type="button" class="primary" id="btn-play" aria-pressed="true">Pause</button>
-        <input type="range" id="scrub" min="0" max="0" value="0" aria-label="Parcourir le temps">
+      <nav aria-label="Vues">
+        <button type="button" data-view="accueil">Accueil<small>Anneaux · synthèse</small></button>
+        <button type="button" data-view="cognition">Cognition<small>Langages · construits</small></button>
+        <button type="button" data-view="univers" aria-current="page">Univers<small>Constellation live</small></button>
+        <button type="button" data-view="signaux">Signaux<small>Features · pas de brut</small></button>
+        <button type="button" data-view="temps">Temps<small>Fan chart · T0</small></button>
+      </nav>
+      <div class="side-foot">
+        <div class="layers" role="group" aria-label="Couches HCSM">
+          <button type="button" data-layer="K" aria-pressed="true">K</button>
+          <button type="button" data-layer="E" aria-pressed="true">E</button>
+          <button type="button" data-layer="I" aria-pressed="true">I</button>
+        </div>
+        <p>v0.3 · local · simulé<br><a href="docs/outil-visualisation.md">doc</a> · pas un générateur de code</p>
       </div>
+    </aside>
+
+    <header class="top">
+      <div>
+        <h1 id="view-title">Univers</h1>
+        <p class="sub" id="view-sub">Constellation knowledge · evidence · inference</p>
+      </div>
+      <label class="search"><span class="sr">Filtrer</span><input id="q" type="search" placeholder="Filtrer un nœud…"></label>
+      <div class="live" id="live" data-on="true"><i></i> LIVE</div>
+      <div class="clock" id="clock">T0 + 00:00</div>
+      <button type="button" class="primary" id="btn-play" aria-pressed="true">Pause</button>
     </header>
 
-    <nav class="rail" aria-label="Couches HCSM">
-      <button type="button" data-layer="K" aria-pressed="true" title="Knowledge — ce que la science sait">
-        <span class="ly">K</span><small>Savoir</small>
-      </button>
-      <button type="button" data-layer="E" aria-pressed="true" title="Evidence — ce qui est observé">
-        <span class="ly">E</span><small>Preuve</small>
-      </button>
-      <button type="button" data-layer="I" aria-pressed="true" title="Inference — ce que l’on peut conclure">
-        <span class="ly">I</span><small>Inférer</small>
-      </button>
-      <div class="spacer"></div>
-      <a href="docs/outil-visualisation.md">doc</a>
-    </nav>
-
     <main class="stage" id="stage">
-      <svg class="graph" id="graph" viewBox="0 0 1000 620" role="img" aria-label="Graphe coordonné knowledge, evidence, inference"></svg>
-      <p class="hint">Une information, plusieurs projections. K = science · E = mesure · I = hypothèse. Cliquer un nœud lie toutes les vues.</p>
+      <section class="view" data-panel="accueil" hidden>
+        <div class="dash">
+          <div class="glass ring-card" id="ring-cov"></div>
+          <div class="glass ring-card" id="ring-conf"></div>
+          <div class="glass dash-graph">
+            <svg id="graph-mini" viewBox="0 0 640 280" role="img" aria-label="Mini constellation"></svg>
+          </div>
+          <div class="cards" id="est-cards"></div>
+        </div>
+      </section>
+      <section class="view" data-panel="cognition" hidden>
+        <div class="cog-grid">
+          <div class="glass" id="cog-body"></div>
+          <div class="glass" id="cog-list"></div>
+        </div>
+      </section>
+      <section class="view" data-panel="univers">
+        <svg class="sky" id="graph" viewBox="0 0 1100 640" role="img" aria-label="Constellation live"></svg>
+        <div class="tip" id="tip" hidden></div>
+      </section>
+      <section class="view" data-panel="signaux" hidden>
+        <div class="wave-grid big" id="waves-big"></div>
+      </section>
+      <section class="view" data-panel="temps" hidden>
+        <div class="glass fan-full">
+          <h3 id="fan-title-full">Charge cognitive · incertitude dans le temps</h3>
+          <svg id="fan-full" viewBox="0 0 1000 280" role="img" aria-label="Fan chart"></svg>
+          <input type="range" id="scrub-full" min="0" max="0" value="0" aria-label="Parcourir le temps">
+        </div>
+      </section>
     </main>
 
-    <aside class="insp" id="insp" aria-label="Inspecteur">
+    <aside class="insp">
       <div id="insp-est"></div>
       <div id="insp-langs"></div>
       <div id="insp-body"></div>
@@ -60,16 +89,19 @@
 
     <footer class="strip">
       <div class="waves">
-        <h3>Signaux · features (pas de brut)</h3>
+        <h3>Signaux</h3>
         <div class="wave-grid" id="waves"></div>
       </div>
       <div class="fanbox">
-        <h3 id="fan-title">Charge cognitive · fan chart</h3>
-        <svg id="fan" viewBox="0 0 520 170" role="img" aria-label="Évolution avec bande d’incertitude"></svg>
+        <h3 id="fan-title">Fan chart</h3>
+        <svg id="fan" viewBox="0 0 520 150" role="img" aria-label="Incertitude temporelle"></svg>
+      </div>
+      <div class="scrub-wrap">
+        <input type="range" id="scrub" min="0" max="0" value="0" aria-label="Temps">
+        <span id="ctx">sim-001 · bureau</span>
       </div>
     </footer>
   </div>
-
   <script src="js/dashboard.js"></script>
 </body>
 </html>
