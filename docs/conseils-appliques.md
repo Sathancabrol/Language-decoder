@@ -27,6 +27,16 @@ Chaque remarque de la discussion est reliée à un geste concret. Rien n’est l
 | Cognition incarnée | Contexte (bureau, individuel) à côté des signaux du corps |
 | Badge simulation + limites | En-tête et pied |
 | Réemploi visualisation livrable | JSON contrat, `data-kind`, CSS d’incertitude stables |
+| Conversation ≠ mémoire | `docs/conversations/` vs `docs/memoire/` + `data/memoire.json` |
+| Continuer avec une IA | Vue Mémoire, bouton copier le contexte |
+| Provenance | Chaque conversation : IA, date, projet, fichier |
+| Memory + RAG + Graph, V1 seulement | Extraire à la main, graphe listé, pas d’embeddings encore |
+| Format 2040 (persona, journée, 4 KPI, avant/après) | Vue Horizons, `data/monde-2040.json` |
+| 2040 = scénarios | Badge / kicker « scénario », pas des mesures Decoder |
+| L’humain décide l’éthique (Sarah 14:00) | Action d’interface réversible + lecture des cartes 2040 |
+| Caméras urbaines / auth cardiaque | Lignes rouges dans Horizons (cyber, villes) |
+| HUD Cognitorium | Sidebar, verre, teal, radar de couverture — `docs/design-visuel.md` |
+| Refus des scores de traits à 82 % | Radar = modalités on/off, jamais « résilience cognitive » |
 
 ## Ce que le prototype refuse volontairement
 

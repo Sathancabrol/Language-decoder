@@ -1,0 +1,207 @@
+{
+  "meta": {
+    "type": "scenarios",
+    "pas_une_prevision": true,
+    "horizon": "2040-2045",
+    "sources_citees": ["NIST", "NASA", "IEA", "Nature", "Science", "NeurIPS"],
+    "lecture": "Horizons pour tester les principes du décodeur : incertitude, minimisation, contrôle humain."
+  },
+  "domaines": [
+    {
+      "id": "ia",
+      "emoji": "IA",
+      "titre": "Intelligence artificielle",
+      "persona": "Sarah, 35 ans — architecte urbaine à Lyon",
+      "quand": "Mardi 14 octobre 2041",
+      "accroche": "L'IA est invisible, omniprésente — et l'humain tranche l'éthique.",
+      "kpis": [
+        { "valeur": "−40 %", "label": "Tâches admin" },
+        { "valeur": "+300 %", "label": "Productivité créative" },
+        { "valeur": "0", "label": "Barrière de langue" },
+        { "valeur": "12 s", "label": "400 concepts" }
+      ],
+      "journee": [
+        { "h": "07:00", "titre": "Avatar personnel", "texte": "Triage, négociation, contrats, planning selon le sommeil.", "tags": ["identité souveraine", "agent", "biométrie"] },
+        { "h": "08:30", "titre": "Véhicule autonome", "texte": "Travail en XR vers Singapour, traduction neuronale.", "tags": ["XR", "traduction"] },
+        { "h": "10:00", "titre": "Génération architecturale", "texte": "400 variantes simulées énergétiquement en 12 s.", "tags": ["LLM multimodal"] },
+        { "h": "14:00", "titre": "Supervision humaine", "texte": "L'IA propose de déplacer 200 familles. Sarah valide. L'IA optimise, l'humain décide du consentement.", "tags": ["explicable", "gouvernance"] },
+        { "h": "18:30", "titre": "Domicile", "texte": "Repas, température, assistant éducatif — santé prédictive en fond.", "tags": ["IoT", "santé"] }
+      ],
+      "avant_apres": [
+        ["Emails manuels", "Avatar souverain"],
+        ["Réunions + avions", "XR temps réel"],
+        ["Conception en semaines", "Génération + simulation"]
+      ],
+      "lien_decoder": "Aligné : boucle humain–IA, IA explicable. Tension : biométrie de l'avatar — hors minimisation du prototype.",
+      "tension": "biometrie"
+    },
+    {
+      "id": "bio",
+      "emoji": "BIO",
+      "titre": "Biotech & santé",
+      "persona": "Thomas, 58 ans — patient à Bordeaux",
+      "quand": "Jeudi 6 novembre 2042",
+      "accroche": "Médecine prédictive. Ce n'est pas Language Decoder.",
+      "kpis": [
+        { "valeur": "+15 ans", "label": "Espérance (scénario)" },
+        { "valeur": "−90 %", "label": "Maladies dégénératives" },
+        { "valeur": "8 min", "label": "Diagnostic vs 6 mois" },
+        { "valeur": "72 h", "label": "Conception traitement" }
+      ],
+      "journee": [
+        { "h": "06:00", "titre": "Nanocapteurs", "texte": "Biomarqueurs cardiaques, microbiome, expression génique en continu.", "tags": ["nanocapteurs", "biomarqueurs"] },
+        { "h": "07:30", "titre": "Alerte IA", "texte": "Risque d'infarctus à 23 % / 72 h — chiffre à lire comme hypothèse, pas comme fait.", "tags": ["prédiction"] },
+        { "h": "10:00", "titre": "Consultation hybride", "texte": "Dossier génome + similarités. L'humain clinicien reste dans la boucle.", "tags": ["précision"] },
+        { "h": "11:30", "titre": "Thérapie génique", "texte": "CRISPR ciblé, conçu en 72 h — hors périmètre Decoder.", "tags": ["CRISPR"] },
+        { "h": "16:00", "titre": "Exosquelette + BCI", "texte": "Rééducation, données au médecin. Chaîne BCI : acquisition → features → classe — comme le décodeur, avec finalité médicale.", "tags": ["BCI", "exo"] }
+      ],
+      "avant_apres": [
+        ["Médecine réactive", "Médecine prédictive"],
+        ["Traitement unique", "Thérapie sur mesure"],
+        ["Dépistage tardif", "Capteurs 24/7"]
+      ],
+      "lien_decoder": "Même chaîne de signaux. Finalité opposée : diagnostic vs adaptation d'interface. Ne pas fusionner les deux.",
+      "tension": "diagnostic"
+    },
+    {
+      "id": "energie",
+      "emoji": "NRJ",
+      "titre": "Énergie",
+      "persona": "Famille Dubois — Marseille, maison positive",
+      "quand": "Samedi 22 mars 2043",
+      "accroche": "La maison produit, stocke et échange. Contexte environnemental, pas langage du corps.",
+      "kpis": [
+        { "valeur": "0 €", "label": "Facture (scénario)" },
+        { "valeur": "−80 %", "label": "Émissions foyer" },
+        { "valeur": "95 %", "label": "Rendement stockage" },
+        { "valeur": "34 %", "label": "Rendement PV" }
+      ],
+      "journee": [
+        { "h": "00:00", "titre": "Stockage solide", "texte": "Batterie sodium 40 kWh, rendement 95 %.", "tags": ["sodium-ion"] },
+        { "h": "08:00", "titre": "Toit perovskite", "texte": "Tandem 34 %, 85 kWh/jour.", "tags": ["BIPV"] },
+        { "h": "12:00", "titre": "V2G", "texte": "La voiture revend 30 kWh au pic.", "tags": ["peer-to-peer"] },
+        { "h": "18:00", "titre": "Géothermie IA", "texte": "Température pièce / présence / métabolisme — le métabolisme ici est un contexte, pas une émotion.", "tags": ["zéro fossile"] },
+        { "h": "22:00", "titre": "Maison négative", "texte": "Surplus 12 kWh au microgrid.", "tags": ["carbone négatif"] }
+      ],
+      "avant_apres": [
+        ["200 €/mois", "Revenu énergie"],
+        ["Réseau central", "Microgrids P2P"],
+        ["Chauffage gaz", "Géothermie + pompes IA"]
+      ],
+      "lien_decoder": "Utile comme contexte d'environnement (charge, chaleur, présence). Pas un biomarqueur d'état intérieur.",
+      "tension": null
+    },
+    {
+      "id": "villes",
+      "emoji": "VIL",
+      "titre": "Villes intelligentes",
+      "persona": "Amélie, 29 ans — Paris 2040",
+      "quand": "Mercredi 9 avril 2041",
+      "accroche": "Ville vivante. La caméra « bienveillante » est une ligne rouge pour le décodeur.",
+      "kpis": [
+        { "valeur": "−50 %", "label": "Embouteillages" },
+        { "valeur": "−70 %", "label": "Pollution air" },
+        { "valeur": "+30 %", "label": "Espaces verts" },
+        { "valeur": "4 min", "label": "Secours" }
+      ],
+      "journee": [
+        { "h": "08:00", "titre": "Façade vivante", "texte": "Mousse filtrante, régulation thermique.", "tags": ["biofiltration"] },
+        { "h": "08:15", "titre": "Bus autonome", "texte": "Green wave, 12 min vs 35.", "tags": ["V2I"] },
+        { "h": "12:30", "titre": "Ferme urbaine", "texte": "Toit hydroponique, eau de pluie 98 %.", "tags": ["circuit court"] },
+        { "h": "18:00", "titre": "Caméras + drone", "texte": "Malaise détecté en 3 s, intervention 4 min. Finalité secours ≠ profilage.", "tags": ["surveillance"] },
+        { "h": "20:00", "titre": "Rue jardin", "texte": "−70 % parking, jardins de pluie, mobilité douce.", "tags": ["ville éponge"] }
+      ],
+      "avant_apres": [
+        ["Trafic chaotique", "Green wave"],
+        ["Béton / canicule", "Façades végétales"],
+        ["Rue = parking", "Rue = jardin"]
+      ],
+      "lien_decoder": "Tension forte : vidéo visage écartée par minimisation. Un secours n'autorise pas une mémoire émotionnelle de la rue.",
+      "tension": "surveillance"
+    },
+    {
+      "id": "espace",
+      "emoji": "LUNE",
+      "titre": "Espace",
+      "persona": "Yuki, 34 ans — base lunaire Artemis",
+      "quand": "Lundi 17 juin 2044",
+      "accroche": "Contexte extrême : isolation, charge, communication. Le décodeur y serait un outil d'interface, pas un diagnostic.",
+      "kpis": [
+        { "valeur": "48", "label": "Habitants permanents" },
+        { "valeur": "−90 %", "label": "Coût d'accès" },
+        { "valeur": "500 Md$", "label": "Économie spatiale" },
+        { "valeur": "scénario", "label": "Lien « 0 ms »" }
+      ],
+      "journee": [
+        { "h": "10:00", "titre": "Habitat", "texte": "Module sous régolithe, 1/6 g, 48 personnes.", "tags": ["radioprotection"] },
+        { "h": "12:00", "titre": "Robots ISRU", "texte": "Impression 3D en béton lunaire, supervision Terre.", "tags": ["essaim"] },
+        { "h": "16:00", "titre": "Glace polaire", "texte": "O2 à respirer, H2 carburant.", "tags": ["électrolyse"] },
+        { "h": "20:00", "titre": "Lien famille", "texte": "Le « 0 ms quantique » est un horizon spéculatif — à marquer comme tel.", "tags": ["spéculation"] },
+        { "h": "02:00", "titre": "Télescope face cachée", "texte": "Astronomie sans interférences terrestres.", "tags": ["astronomie"] }
+      ],
+      "avant_apres": [
+        ["20 k€/kg orbite", "Réutilisable moins cher"],
+        ["Missions courtes", "Base permanente"],
+        ["Matériaux importés", "Fabrication in situ"]
+      ],
+      "lien_decoder": "Cas d'étude extrême pour charge cognitive et fatigue. Les latences « quantiques 0 ms » restent de la fiction utile, pas une spec.",
+      "tension": "speculation"
+    },
+    {
+      "id": "cyber",
+      "emoji": "CYB",
+      "titre": "Cybersécurité",
+      "persona": "Marie, 41 ans — BCE",
+      "quand": "Vendredi 23 janvier 2042",
+      "accroche": "Post-quantique : oui. Auth par ADN + rythme cardiaque + cognition : non pour ce prototype.",
+      "kpis": [
+        { "valeur": "0", "label": "Violation majeure/an" },
+        { "valeur": "100 %", "label": "Post-quantum (scénario)" },
+        { "valeur": "0,3 s", "label": "Temps de réponse" },
+        { "valeur": "QKD", "label": "Registre" }
+      ],
+      "journee": [
+        { "h": "03:00", "titre": "Attaque quantique", "texte": "Détection IA, contre-mesure 0,3 s.", "tags": ["réponse auto"] },
+        { "h": "09:00", "titre": "Kyber", "texte": "Rotation 12 M clés CRYSTALS-Kyber (NIST).", "tags": ["lattice"] },
+        { "h": "11:30", "titre": "Auth continue", "texte": "Rythme cardiaque + SNPs + comportement cognitif. Refusé comme finalité Decoder.", "tags": ["zero trust", "refus"] },
+        { "h": "14:00", "titre": "Transaction QKD", "texte": "Registre assisté par distribution quantique de clés.", "tags": ["QKD"] },
+        { "h": "17:00", "titre": "Red team IA", "texte": "Deux IA s'affrontent, l'humain valide les stratégies.", "tags": ["supervision"] }
+      ],
+      "avant_apres": [
+        ["RSA / ECC", "Lattice (Kyber)"],
+        ["Mots de passe", "Biométrie continue — refus Decoder"],
+        ["Réponse humaine", "IA vs IA, humain supervise"]
+      ],
+      "lien_decoder": "Refus : le décodeur n'est pas un facteur d'authentification. Un état estimé à 68 % [52–79] ne doit ouvrir aucun coffre.",
+      "tension": "auth_biometrique"
+    },
+    {
+      "id": "mat",
+      "emoji": "MAT",
+      "titre": "Matériaux & fabrication",
+      "persona": "Lucas, 31 ans — designer, Eindhoven",
+      "quand": "Mardi 12 août 2043",
+      "accroche": "Fabrication locale, objets qui se réparent. Peu de langage humain — beaucoup d'interface objet.",
+      "kpis": [
+        { "valeur": "−90 %", "label": "Déchets production" },
+        { "valeur": "−70 %", "label": "Transport" },
+        { "valeur": "50 ans", "label": "Durée de vie" },
+        { "valeur": "99,7 %", "label": "Recyclage" }
+      ],
+      "journee": [
+        { "h": "09:00", "titre": "IA matériaux 2D", "texte": "10 000 combinaisons graphène / métamatériaux.", "tags": ["simulation"] },
+        { "h": "11:00", "titre": "Impression 4D", "texte": "Plate à l'expédition, forme à 35 °C.", "tags": ["polymère"] },
+        { "h": "14:00", "titre": "Micro-usine", "texte": "4 h, 2 km de chaîne.", "tags": ["circuit court"] },
+        { "h": "16:00", "titre": "Auto-réparation", "texte": "Microcapsules, 50 ans de vie.", "tags": ["longévité"] },
+        { "h": "18:00", "titre": "Recyclage enzymatique", "texte": "Monomères purs, 99,7 %.", "tags": ["circulaire"] }
+      ],
+      "avant_apres": [
+        ["Masse lointaine", "Micro-fab locale"],
+        ["Obsolescence", "Auto-réparation"],
+        ["Recyclage −40 %", "Moléculaire −0,3 %"]
+      ],
+      "lien_decoder": "L'interface s'adapte à l'objet autant qu'à l'humain. Même principe : représenter avant d'agir.",
+      "tension": null
+    }
+  ]
+}

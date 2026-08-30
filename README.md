@@ -1,70 +1,60 @@
 # Language Decoder
 
-Prototype de dashboard pour **lire les langages de l’humain sans prétendre lire son intérieur**.
+Prototype HUD pour **lire les langages de l’humain sans prétendre lire son intérieur**.
 
-La science permet d’observer des signes (comportement, parole, physiologie, éventuellement BCI), de les relier au contexte et au temps, d’estimer des états latents **avec une incertitude affichée**, puis d’adapter une interface de façon **explicable, réversible et minimale**.
+Couche langages / interface de [Cognitorium](https://github.com/Sathancabrol/COGNITORIUM) : observer des signes, les relier au contexte et au temps, estimer des états **avec incertitude**, adapter l’interface — explicable, réversible, minimale.
 
-Les données affichées sont **simulées**. Ce n’est pas un diagnostic médical.
+Quatre vues :
+
+1. **Décodeur** — mesures, hypothèses, action
+2. **Mémoire** — conversations ≠ extraits, contexte à coller dans une autre IA
+3. **Horizons 2040** — sept scénarios pour tester les lignes rouges
+4. **Principes** — HTML, incertitude, minimisation
+
+Les données sont **simulées**. Ce n’est pas un diagnostic médical.
 
 > Observer les signes, comprendre le contexte, représenter les états, anticiper les besoins et adapter l’interface.
 
-## Ouvrir le prototype
-
-Servir le dossier et ouvrir `index.html` :
+## Ouvrir
 
 ```bash
 python3 -m http.server 8080
 ```
 
-Puis visiter `http://localhost:8080`.
+Puis `http://localhost:8080`. Ancres : `#decoder` `#memoire` `#horizons` `#principes`.
 
-Sans serveur, le script se rabat sur des données intégrées (le `fetch` du JSON peut échouer en `file://`).
-
-## Contenu du dépôt
+## Dépôt
 
 ```
-language-decoder/
-├── README.md
-├── index.html                 # dashboard
-├── css/dashboard.css
+├── index.html
+├── css/dashboard.css          # HUD Cognitorium (teal / verre / sidebar)
 ├── js/dashboard.js
-├── data/session-simulee.json  # contrat de données
+├── data/
+│   ├── session-simulee.json   # contrat décodeur
+│   ├── memoire.json           # décisions / idées / questions
+│   └── monde-2040.json        # 7 domaines, lecture Decoder
 └── docs/
-    ├── discussion.md          # archive de la réflexion
-    ├── conseils-appliques.md  # chaque conseil → un geste
-    ├── format-html.md         # format HTML retenu
-    ├── incertitude.md         # indicateurs visuels
-    └── minimisation.md        # données minimales
+    ├── conversations/         # journaux bruts (jamais écrasés)
+    ├── memoire/               # extraits
+    ├── design-visuel.md       # ce qu'on prend / refuse des visuels Cognitorium
+    ├── discussion.md
+    ├── format-html.md
+    ├── incertitude.md
+    └── minimisation.md
 ```
 
-Le dossier `docs/` conserve les remarques de la discussion. Le dashboard les applique.
+## Cadrage
 
-## Trois réponses de cadrage
+**HTML** — sémantique, local, JSON à part. Pas de `<meter>` pour une hypothèse. [`docs/format-html.md`](docs/format-html.md)
 
-**Quel format HTML ?** HTML5 sémantique, `lang="fr"`, CSS et JS locaux, JSON à part, aucune dépendance distante. Pas de `<meter>` pour une hypothèse (cela simulerait une grandeur connue). Détail : [`docs/format-html.md`](docs/format-html.md).
+**Incertitude** — point + intervalle, hypothèses concurrentes, hachure = inféré. Pas de feu tricolore, pas de « résilience 82 % ». [`docs/incertitude.md`](docs/incertitude.md)
 
-**Quels indicateurs d’incertitude ?** Point + intervalle, hypothèses concurrentes non exclusives, hachures pour l’inféré / trait plein pour le mesuré, écart à la ligne de base, qualité de signal, bande temporelle, preuves citées, correction utilisateur. Pas de feu tricolore ni de camembert d’émotions. Détail : [`docs/incertitude.md`](docs/incertitude.md).
+**Minimisation** — features de session, EEG / audio / visage off, pas d’auth biométrique. Moins de signaux → intervalles plus larges. [`docs/minimisation.md`](docs/minimisation.md)
 
-**Comment minimiser les données ?** Finalité unique (adapter l’interface pendant la tâche), features plutôt que brut, consentement par modalité, conservation = session, pas d’identité, EEG / audio / visage **éteints**, refus possible. Moins de signaux ⇒ intervalles plus larges, pas un silence trompeur. Détail : [`docs/minimisation.md`](docs/minimisation.md).
+**Mémoire multi-IA** — centraliser le *contexte*, pas seulement les fichiers. V1 de ce dépôt : originaux + extraits + bouton « Continuer avec une IA ». [`docs/conversations/2026-08-30-memoire-multi-ia.md`](docs/conversations/2026-08-30-memoire-multi-ia.md)
 
-## Ce que le dashboard sépare
+**Visuels Cognitorium** — HUD, sidebar, radar de *couverture* (modalités collectées), 4 KPI, timeline, graphe. On refuse le jumeau qui lit l’esprit. [`docs/design-visuel.md`](docs/design-visuel.md)
 
-| Couche | Nature |
-| --- | --- |
-| Langages | Modalités on/off (minimisation) |
-| Signaux | Mesures / caractéristiques |
-| États | Hypothèses + intervalles |
-| Temps | T1…Tn avec bande d’incertitude |
-| Action | Suggestion d’interface, refus possible |
-| Représentation | JSON données / hypothèses / décision |
+## Suite livrable
 
-## Suite (visualisation livrable)
-
-Ce dépôt est conçu pour être repris :
-
-1. Conserver `data/session-simulee.json` comme contrat.
-2. Conserver `data-kind` (`measure` | `inference` | `action`) et les classes d’incertitude.
-3. Brancher un jeu anonymisé, puis seulement des capteurs avec consentement.
-4. Documenter le modèle d’inférence réel et ses seuils.
-
-Principes à ne pas diluer : incertitude visible, minimisation, contrôle humain, pas de diagnostic.
+Conserver le JSON, les `data-kind`, les classes d’incertitude, la séparation conversation / mémoire. Ne pas diluer : incertitude, minimisation, contrôle humain, pas de diagnostic.

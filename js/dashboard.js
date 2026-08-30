@@ -365,23 +365,23 @@
     const grid = [0, 0.5, 1].map(function (v) {
       const yy = y(v).toFixed(1);
       return '<line x1="' + pad.l + '" x2="' + (w - pad.r) + '" y1="' + yy + '" y2="' + yy +
-        '" stroke="#d7cfc0" stroke-dasharray="3 4"/>' +
-        '<text x="4" y="' + (Number(yy) + 4) + '" fill="#5e584f" font-size="10" font-family="ui-monospace, monospace">' +
+        '" stroke="#263352" stroke-dasharray="3 4"/>' +
+        '<text x="4" y="' + (Number(yy) + 4) + '" fill="#8ea2c9" font-size="10" font-family="ui-monospace, monospace">' +
         Math.round(v * 100) + '</text>';
     }).join("");
 
     const dotsSvg = pts.map(function (p, i) {
       return '<circle cx="' + x(i).toFixed(1) + '" cy="' + y(p.y).toFixed(1) +
-        '" r="4" fill="#1c1914" stroke="#fcfaf4" stroke-width="2"/>';
+        '" r="4" fill="#edf2f7" stroke="#0b1020" stroke-width="2"/>';
     }).join("");
 
     const svg =
       '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="Charge cognitive estimée dans le temps, avec bande d’incertitude">' +
       '<defs><pattern id="hachure" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">' +
-      '<line x1="0" y1="0" x2="0" y2="6" stroke="rgb(141 90 26 / 0.45)" stroke-width="2"/></pattern></defs>' +
+      '<line x1="0" y1="0" x2="0" y2="6" stroke="rgb(228 177 90 / 0.55)" stroke-width="2"/></pattern></defs>' +
       grid +
       '<path d="' + band + '" fill="url(#hachure)" opacity="0.9"/>' +
-      '<path d="' + line + '" fill="none" stroke="#1f4f4a" stroke-width="2"/>' +
+      '<path d="' + line + '" fill="none" stroke="#2dd4bf" stroke-width="2"/>' +
       dotsSvg +
       "</svg>";
 
@@ -522,22 +522,198 @@
       JSON.stringify(representation(), null, 2);
   }
 
-  async function charger() {
+  async function chargerJson(path) {
     try {
-      const r = await fetch("data/session-simulee.json", { cache: "no-store" });
-      if (r.ok) {
-        const json = await r.json();
-        Object.keys(FALLBACK.signaux).forEach(function (id) {
-          if (json.signaux && json.signaux[id] && !json.signaux[id].label) {
-            json.signaux[id].label = FALLBACK.signaux[id].label || SIGNALS_META[id].label;
-          }
-        });
-        return json;
-      }
-    } catch (e) {
-      /* fichier local sans serveur : repli */
+      const r = await fetch(path, { cache: "no-store" });
+      if (r.ok) return r.json();
+    } catch (e) { /* file:// */ }
+    return null;
+  }
+
+  async function charger() {
+    const json = await chargerJson("data/session-simulee.json");
+    if (json) {
+      Object.keys(FALLBACK.signaux).forEach(function (id) {
+        if (json.signaux && json.signaux[id] && !json.signaux[id].label) {
+          json.signaux[id].label = FALLBACK.signaux[id].label || SIGNALS_META[id].label;
+        }
+      });
+      return json;
     }
     return FALLBACK;
+  }
+
+  const VUES = {
+    decoder: {
+      titre: "Décodeur",
+      lede: "Observer les signes, comprendre le contexte, représenter les états, adapter l’interface — sans lire l’intérieur de la personne."
+    },
+    memoire: {
+      titre: "Mémoire multi-IA",
+      lede: "Une mémoire externe. Les modèles ne sont que des interfaces. L’original n’est jamais remplacé par l’extrait."
+    },
+    horizons: {
+      titre: "Horizons 2040",
+      lede: "Sept journées-types pour tester les lignes rouges du décodeur. Scénarios, pas des prévisions."
+    },
+    principes: {
+      titre: "Principes",
+      lede: "HTML sémantique, incertitude visible, minimisation par modalité — grammaire Cognitorium sans fausse précision."
+    }
+  };
+
+  function aller(id) {
+    document.querySelectorAll("[data-view]").forEach(function (v) {
+      v.hidden = v.getAttribute("data-view") !== id;
+    });
+    document.querySelectorAll(".nav-list button").forEach(function (b) {
+      if (b.getAttribute("data-go") === id) b.setAttribute("aria-current", "page");
+      else b.removeAttribute("aria-current");
+    });
+    const meta = VUES[id] || VUES.decoder;
+    document.getElementById("titre-vue").textContent = meta.titre;
+    document.getElementById("lede-vue").textContent = meta.lede;
+    if (history.replaceState) history.replaceState(null, "", "#" + id);
+    else location.hash = id;
+  }
+
+  function itemMem(kicker, titre, corps) {
+    return el("div", { class: "mem-item" }, [
+      el("div", { class: "who" }, [kicker]),
+      el("strong", { style: "display:block;margin:4px 0 2px" }, [titre]),
+      corps ? el("p", { class: "note" }, [corps]) : null
+    ]);
+  }
+
+  function renderMemoire(mem) {
+    if (!mem) return;
+    const conv = document.getElementById("mem-conv");
+    conv.replaceChildren();
+    mem.conversations.forEach(function (c) {
+      conv.appendChild(itemMem(c.ia + " · " + c.date, c.projet, c.sujets.join(" · ")));
+    });
+    const dec = document.getElementById("mem-dec");
+    dec.replaceChildren();
+    mem.decisions.forEach(function (d) {
+      dec.appendChild(itemMem(d.projet + " · " + d.statut, d.contenu, "source " + d.source));
+    });
+    const ide = document.getElementById("mem-idees");
+    ide.replaceChildren();
+    mem.idees.forEach(function (d) {
+      ide.appendChild(itemMem(d.source, d.contenu));
+    });
+    const q = document.getElementById("mem-q");
+    q.replaceChildren();
+    mem.questions.forEach(function (d) {
+      q.appendChild(itemMem(d.id, d.contenu));
+    });
+
+    const g = mem.graphe || [];
+    let edges = "";
+    const nodes = {};
+    g.forEach(function (t, i) {
+      nodes[t[0]] = true;
+      nodes[t[2]] = true;
+      const y = 28 + i * 28;
+      edges += '<text x="24" y="' + y + '" fill="#8ea2c9" font-size="12">' +
+        t[0] + " → " + t[1] + " → " + t[2] + "</text>";
+    });
+    document.getElementById("mem-graph").innerHTML =
+      '<svg class="graph-svg" viewBox="0 0 720 ' + (40 + g.length * 28) +
+      '" role="img" aria-label="Graphe des relations extraite de la mémoire">' +
+      edges + "</svg>";
+
+    const ctx = [
+      "PROJET",
+      "Language Decoder — couche langages / interface de Cognitorium",
+      "",
+      "CONTEXTE",
+      "Prototype HUD du 30 août 2026. Données simulées. Pas un diagnostic.",
+      "",
+      "DÉCISIONS EXISTANTES",
+      mem.decisions.map(function (d, i) { return (i + 1) + ". " + d.contenu; }).join("\n"),
+      "",
+      "QUESTIONS OUVERTES",
+      mem.questions.map(function (d) { return "- " + d.contenu; }).join("\n"),
+      "",
+      "TRAVAUX PRÉCÉDENTS",
+      mem.conversations.map(function (c) { return "- " + c.date + " · " + c.ia + " · " + c.projet; }).join("\n"),
+      "",
+      "INSTRUCTION",
+      "Continue la réflexion à partir de cet état, sans refaire ce qui a déjà été traité.",
+      "Garde l'inférence probabiliste, la minimisation, et le contrôle humain."
+    ].join("\n");
+    document.getElementById("contexte-ia").value = ctx;
+  }
+
+  function renderHorizons(data) {
+    if (!data) return;
+    const root = document.getElementById("domaines");
+    const detail = document.getElementById("domaine-detail");
+    let courant = data.domaines[0].id;
+
+    function paintDetail(d) {
+      detail.replaceChildren();
+      detail.appendChild(el("p", { class: "kicker" }, [d.emoji + " · scénario"]));
+      detail.appendChild(el("h2", null, [d.titre]));
+      detail.appendChild(el("p", null, [d.persona + " — " + d.quand]));
+      detail.appendChild(el("p", null, [d.accroche]));
+      const kpis = el("div", { class: "kpis" });
+      d.kpis.forEach(function (k) {
+        kpis.appendChild(el("div", { class: "kpi" }, [
+          el("b", null, [k.valeur]),
+          el("span", null, [k.label])
+        ]));
+      });
+      detail.appendChild(kpis);
+      const jour = el("div", { class: "journee" });
+      d.journee.forEach(function (b) {
+        const pills = el("div", { class: "pills" });
+        (b.tags || []).forEach(function (t) { pills.appendChild(el("span", { class: "pill" }, [t])); });
+        jour.appendChild(el("div", { class: "beat" }, [
+          el("time", null, [b.h]),
+          el("div", null, [
+            el("strong", null, [b.titre]),
+            el("p", { class: "note" }, [b.texte]),
+            pills
+          ])
+        ]));
+      });
+      detail.appendChild(jour);
+      const aa = el("div", { class: "aa" });
+      d.avant_apres.forEach(function (p) {
+        aa.appendChild(el("div", null, [
+          el("span", { class: "from" }, [p[0]]),
+          el("span", { class: "muted" }, ["→"]),
+          el("span", { class: "to" }, [p[1]])
+        ]));
+      });
+      detail.appendChild(aa);
+      detail.appendChild(el("p", { class: "tension" }, ["Lecture Decoder — " + d.lien_decoder]));
+    }
+
+    function paintList() {
+      root.replaceChildren();
+      data.domaines.forEach(function (d) {
+        const btn = el("button", {
+          type: "button",
+          class: "domaine",
+          "aria-pressed": d.id === courant ? "true" : "false"
+        }, [
+          el("span", { class: "em" }, [d.emoji]),
+          el("h3", null, [d.titre]),
+          el("p", null, [d.persona])
+        ]);
+        btn.addEventListener("click", function () {
+          courant = d.id;
+          paintList();
+          paintDetail(d);
+        });
+        root.appendChild(btn);
+      });
+    }
+    paintList();
+    paintDetail(data.domaines[0]);
   }
 
   document.addEventListener("DOMContentLoaded", async function () {
@@ -546,5 +722,30 @@
       etat.data.signaux.frequence_cardiaque.ecart_bpm = 24;
     }
     render();
+
+    const mem = await chargerJson("data/memoire.json");
+    const hor = await chargerJson("data/monde-2040.json");
+    renderMemoire(mem);
+    renderHorizons(hor);
+
+    document.querySelectorAll(".nav-list button").forEach(function (b) {
+      b.addEventListener("click", function () { aller(b.getAttribute("data-go")); });
+    });
+    const copy = document.getElementById("btn-copier");
+    if (copy) {
+      copy.addEventListener("click", async function () {
+        const t = document.getElementById("contexte-ia").value;
+        try {
+          await navigator.clipboard.writeText(t);
+          copy.textContent = "Copié";
+        } catch (e) {
+          document.getElementById("contexte-ia").select();
+          copy.textContent = "Sélectionné — Ctrl+C";
+        }
+      });
+    }
+
+    const hash = (location.hash || "").replace("#", "");
+    if (VUES[hash]) aller(hash);
   });
 })();

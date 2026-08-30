@@ -1,6 +1,8 @@
 # Language Decoder — Discussion et réflexion
 
-Archive des remarques issues de l’analyse de la prise de notes manuscrite et de la conversation sur le langage de l’humain et son interface. Ce fichier conserve le fond. L’application concrète se trouve dans le prototype (`index.html`) et dans `docs/conseils-appliques.md`.
+Couche **mémoire** (synthèse exploitable) de la prise de notes. Les journaux bruts sont dans [`conversations/`](conversations/). Les extraits machine sont dans `data/memoire.json`.
+
+Autres fils du 30 août 2026 : [`conversations/2026-08-30-memoire-multi-ia.md`](conversations/2026-08-30-memoire-multi-ia.md) (PAM) et [`conversations/2026-08-30-monde-2040.md`](conversations/2026-08-30-monde-2040.md) (horizons). Application : prototype `index.html`, cadrage `docs/conseils-appliques.md`, visuel `docs/design-visuel.md`.
 
 ---
 
@@ -194,3 +196,6 @@ Recommandations CNIL à documenter : collecte, sécurité, profils, conservation
 - Capteurs réels uniquement avec consentement explicite, plus tard.
 - Documenter limites scientifiques, éthiques et techniques.
 - Réutiliser ce prototype comme base de visualisation livrable dans un autre projet.
+- Garder conversation ≠ mémoire (PAM V1 déjà en place dans `docs/conversations/` + `data/memoire.json`).
+- Réutiliser le format journée-type 2040 (persona + timeline + 4 KPI + avant/après) sans en faire des mesures du décodeur.
+- Prendre la grammaire HUD Cognitorium, refuser les scores de traits à fausse précision.

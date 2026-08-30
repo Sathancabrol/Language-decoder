@@ -1,0 +1,147 @@
+{
+  "meta": {
+    "type": "memoire_structuree",
+    "pas_un_journal_brut": true,
+    "date": "2026-08-30",
+    "projet": "Language Decoder"
+  },
+  "conversations": [
+    {
+      "id": "c-notes-2026-08-30",
+      "ia": "Claude / discussion de prise de notes",
+      "date": "2026-08-30",
+      "projet": "Cognitorium / Language Decoder",
+      "sujets": ["prise de notes", "langages de l'humain", "interface adaptative", "cinq couches"],
+      "fichier": "docs/conversations/2026-08-30-prise-de-notes.md"
+    },
+    {
+      "id": "c-pam-2026-08-30",
+      "ia": "Claude",
+      "date": "2026-08-30",
+      "projet": "Personal AI Memory",
+      "sujets": ["centralisation multi-IA", "conversation vs mémoire", "RAG", "knowledge graph"],
+      "fichier": "docs/conversations/2026-08-30-memoire-multi-ia.md"
+    },
+    {
+      "id": "c-2040-2026-08-30",
+      "ia": "export scénarios",
+      "date": "2026-08-30",
+      "projet": "Horizons 2040",
+      "sujets": ["IA", "biotech", "énergie", "villes", "espace", "cybersécurité", "matériaux"],
+      "fichier": "docs/conversations/2026-08-30-monde-2040.md"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "d1",
+      "contenu": "Inférence probabiliste, jamais lecture directe d'une émotion.",
+      "projet": "Language Decoder",
+      "source": "c-notes-2026-08-30",
+      "statut": "en vigueur"
+    },
+    {
+      "id": "d2",
+      "contenu": "Distinguer conversation (journal brut) et mémoire (synthèse exploitable). Ne jamais remplacer l'original.",
+      "projet": "Personal AI Memory",
+      "source": "c-pam-2026-08-30",
+      "statut": "en vigueur"
+    },
+    {
+      "id": "d3",
+      "contenu": "HTML5 sémantique, CSS/JS locaux, JSON à part, aucune dépendance distante.",
+      "projet": "Language Decoder",
+      "source": "c-notes-2026-08-30",
+      "statut": "en vigueur"
+    },
+    {
+      "id": "d4",
+      "contenu": "Minimisation par modalité. EEG, audio, visage hors collecte par défaut.",
+      "projet": "Language Decoder",
+      "source": "c-notes-2026-08-30",
+      "statut": "en vigueur"
+    },
+    {
+      "id": "d5",
+      "contenu": "Architecture progressive : V1 documents+recherche → V2 extraction → V3 graphe → V4 mêmes connaissances vers toutes les IA.",
+      "projet": "Personal AI Memory",
+      "source": "c-pam-2026-08-30",
+      "statut": "en vigueur"
+    },
+    {
+      "id": "d6",
+      "contenu": "Prendre le langage visuel Cognitorium (HUD, verre, teal, vues multiples) sans les scores de traits à fausse précision.",
+      "projet": "Language Decoder",
+      "source": "COGNITORIUM visuels + c-notes",
+      "statut": "en vigueur"
+    },
+    {
+      "id": "d7",
+      "contenu": "Les scénarios 2040 sont des horizons, pas des prévisions. L'humain décide de l'éthique.",
+      "projet": "Horizons 2040",
+      "source": "c-2040-2026-08-30",
+      "statut": "en vigueur"
+    }
+  ],
+  "idees": [
+    {
+      "id": "i1",
+      "contenu": "Language Decoder = couche langages / cognition / interface de Cognitorium.",
+      "source": "c-notes-2026-08-30"
+    },
+    {
+      "id": "i2",
+      "contenu": "Conversation as a first-class object (IA, date, sujets, décisions, relations, versions).",
+      "source": "c-pam-2026-08-30"
+    },
+    {
+      "id": "i3",
+      "contenu": "Killer feature : générer un contexte « continuer avec une IA » à partir de la mémoire.",
+      "source": "c-pam-2026-08-30"
+    },
+    {
+      "id": "i4",
+      "contenu": "Les IA deviennent des interfaces différentes vers la même mémoire externe.",
+      "source": "c-pam-2026-08-30"
+    },
+    {
+      "id": "i5",
+      "contenu": "Journée-type 2040 comme format visuel (timeline + 4 KPI + avant/après) réutilisable pour un livrable.",
+      "source": "c-2040-2026-08-30"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1",
+      "contenu": "Comment importer réellement les exports ChatGPT, Claude, Kimi, Arena, Anara sans usine à gaz ?"
+    },
+    {
+      "id": "q2",
+      "contenu": "Où s'arrête Language Decoder et où commence un jumeau numérique (les visuels Cognitorium le suggèrent — on le refuse comme lecture intérieure) ?"
+    },
+    {
+      "id": "q3",
+      "contenu": "L'authentification par rythme cardiaque + comportement (scénario cyber 2040) est-elle compatible avec la minimisation ? Non, par défaut."
+    },
+    {
+      "id": "q4",
+      "contenu": "Quel vocabulaire contrôlé relie HCSM, Cognitorium et Language Decoder ?"
+    }
+  ],
+  "concepts": [
+    { "id": "langage-multimodal", "label": "Langage multimodal de l'humain" },
+    { "id": "cinq-couches", "label": "Individu · Cognition · Compétences · Monde pro · Parcours" },
+    { "id": "huit-etapes", "label": "Observer → … → Adapter" },
+    { "id": "pam", "label": "Personal AI Memory / External Cognitive Memory" },
+    { "id": "rag-graph", "label": "Mémoire + RAG + Graphe" },
+    { "id": "conversation-objet", "label": "Conversation comme objet" }
+  ],
+  "graphe": [
+    ["Language Decoder", "couche de", "Cognitorium"],
+    ["Language Decoder", "aligne", "HCSM incertitude"],
+    ["PAM", "alimente", "Language Decoder"],
+    ["Horizons 2040", "teste", "principes Decoder"],
+    ["Cognitorium", "visualise", "cinq couches"],
+    ["Conversation", "extrait", "Mémoire"],
+    ["Mémoire", "ne remplace pas", "Conversation"]
+  ]
+}
