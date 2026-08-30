@@ -1,751 +1,503 @@
-/* Language Decoder — prototype.
-   Les inférences restent des hypothèses. Aucune donnée n'est persistée. */
+/* Cognitorium Representation Engine
+   Visualisation live · vues coordonnées · pas un générateur de code */
 
 (function () {
   "use strict";
 
-  const FALLBACK = {
-    meta: { type: "simulation", horodatage: "2026-08-30T21:07:00Z", diagnostic_medical: false },
-    individu: {
-      id: "sim-001",
-      anonyme: true,
-      ligne_de_base: { frequence_cardiaque_repos: 68, unite: "bpm" }
-    },
-    contexte: {
-      cas: "résolution d'un problème",
-      environnement: "bureau, travail individuel",
-      duree_tache_min: 14
-    },
-    langages: [
-      { id: "cardio_features", label: "Cardio (caractéristiques)", categorie: "physiologique", collecte: true, necessaire: true, justification: "Écart à la ligne de base, pas le tracé ECG." },
-      { id: "comportement_tache", label: "Comportement de tâche", categorie: "comportemental", collecte: true, necessaire: true, justification: "Durée, erreurs, pauses — déjà produites par l'interface." },
-      { id: "respiration", label: "Respiration", categorie: "physiologique", collecte: false, necessaire: false, justification: "Non nécessaire pour ce cas d'étude." },
-      { id: "eeg_bci", label: "EEG / BCI", categorie: "neurophysiologique", collecte: false, necessaire: false, justification: "Signal sensible, hors finalité actuelle." },
-      { id: "parole_audio", label: "Parole (audio)", categorie: "langagier", collecte: false, necessaire: false, justification: "Enregistrement vocal non requis." },
-      { id: "video_visage", label: "Vidéo / visage", categorie: "comportemental", collecte: false, necessaire: false, justification: "Biométrie forte, écartée par minimisation." }
+  const MAX = 180;
+  const TICK_MS = 280;
+  const FALLBACK_ONTO = {
+    constructs: [
+      { id: "k-charge", label: "Charge cognitive", measuredBy: ["e-hr", "e-hrv", "e-temps", "e-erreurs"] },
+      { id: "k-activation", label: "Activation", measuredBy: ["e-hr", "e-hrv"] },
+      { id: "k-frustration", label: "Frustration", measuredBy: ["e-erreurs", "e-temps"] },
+      { id: "k-effort", label: "Effort physique", measuredBy: ["e-hr"] }
     ],
-    signaux: {
-      frequence_cardiaque: { valeur: 92, unite: "bpm", vs_baseline: "elevee", ecart_bpm: 24, qualite: 0.86, langue: "cardio_features", label: "Fréquence cardiaque" },
-      variabilite_cardiaque: { valeur: "diminution relative", unite: null, vs_baseline: "diminution", qualite: 0.74, langue: "cardio_features", label: "Variabilité cardiaque" },
-      temps_sur_tache: { valeur: 14, unite: "min", qualite: 1, langue: "comportement_tache", label: "Temps sur tâche" },
-      erreurs_recentes: { valeur: 3, unite: "count", qualite: 1, langue: "comportement_tache", label: "Erreurs récentes" }
-    },
-    hypotheses: [
-      { id: "charge_cognitive", etat: "charge cognitive élevée", confiance: 0.68, intervalle: [0.52, 0.79], preuves: ["frequence_cardiaque", "variabilite_cardiaque", "temps_sur_tache", "erreurs_recentes"] },
-      { id: "frustration", etat: "frustration possible", confiance: 0.42, intervalle: [0.21, 0.58], preuves: ["erreurs_recentes", "temps_sur_tache"] },
-      { id: "activation", etat: "activation physiologique modérée", confiance: 0.57, intervalle: [0.38, 0.71], preuves: ["frequence_cardiaque", "variabilite_cardiaque"] },
-      { id: "effort_physique", etat: "effort physique", confiance: 0.18, intervalle: [0.05, 0.31], preuves: ["frequence_cardiaque"] }
-    ],
-    confiance_globale: { valeur: 0.72, intervalle: [0.58, 0.81] },
-    alternatives: ["effort physique", "excitation", "stress", "peur", "douleur", "simple déplacement"],
-    timeline: [
-      { id: "T1", label: "T1", charge: 0.42, lo: 0.28, hi: 0.55 },
-      { id: "T2", label: "T2", charge: 0.55, lo: 0.4, hi: 0.68 },
-      { id: "T3", label: "T3", charge: 0.68, lo: 0.52, hi: 0.79 },
-      { id: "T4", label: "T4", charge: 0.72, lo: 0.54, hi: 0.84 },
-      { id: "now", label: "Maintenant", charge: 0.68, lo: 0.52, hi: 0.79 }
-    ],
-    action_interface: {
-      titre: "Proposer une aide progressive",
-      detail: "Réduire la densité d'information, fractionner la tâche, laisser le choix à l'utilisateur.",
-      declencheurs: [
-        "charge cognitive probable en hausse",
-        "trois erreurs récentes",
-        "temps sur tâche allongé par rapport au début"
-      ],
-      proprietes: ["explicable", "réversible", "contrôle utilisateur"]
-    }
+    channels: [
+      { id: "e-hr", label: "FC", unite: "bpm", baseline: 68, on: true, slot: "coeur" },
+      { id: "e-hrv", label: "HRV", unite: "rel", on: true, slot: "coeur" },
+      { id: "e-temps", label: "Temps tâche", unite: "s", on: true, slot: "tache" },
+      { id: "e-erreurs", label: "Erreurs", unite: "n", on: true, slot: "tache" },
+      { id: "e-resp", label: "Respiration", on: false, slot: "souffle" },
+      { id: "e-eeg", label: "EEG / BCI", on: false, slot: "tete" },
+      { id: "e-parole", label: "Parole", on: false, slot: "voix" },
+      { id: "e-video", label: "Vidéo", on: false, slot: "visage" }
+    ]
   };
 
-  const SIGNALS_META = {
-    frequence_cardiaque: { label: "Fréquence cardiaque" },
-    variabilite_cardiaque: { label: "Variabilité cardiaque" },
-    temps_sur_tache: { label: "Temps sur tâche" },
-    erreurs_recentes: { label: "Erreurs récentes" }
+  const S = {
+    playing: true,
+    cursor: 0,
+    selected: "i-charge",
+    layers: { K: true, E: true, I: true },
+    onto: FALLBACK_ONTO,
+    channels: [],
+    hist: [],
+    timer: null
   };
 
-  const etat = {
-    data: null,
-    avis: {},
-    action: null
-  };
-
-  function pct(x) {
-    return Math.round(x * 100);
+  function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
+  function pct(x) { return Math.round(x * 100); }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function fmtT(sec) {
+    const s = Math.max(0, Math.floor(sec));
+    return "T0 + " + pad(Math.floor(s / 60)) + ":" + pad(s % 60);
+  }
+  function onSet() {
+    const set = new Set();
+    S.channels.forEach(function (c) { if (c.on) set.add(c.id); });
+    return set;
   }
 
-  function clamp(x, a, b) {
-    return Math.max(a, Math.min(b, x));
-  }
+  function infer(sample, on) {
+    const load = clamp((sample.hr - 68) / 48, 0, 1);
+    const err = clamp(sample.errors / 7, 0, 1);
+    const time = clamp(sample.t / 900, 0, 1);
+    const hrvLow = clamp(1 - sample.hrv, 0, 1);
 
-  function languesActives() {
-    return new Set(etat.data.langages.filter(function (l) { return l.collecte; }).map(function (l) { return l.id; }));
-  }
-
-  function hypothesesCalculees() {
-    const actives = languesActives();
-    return etat.data.hypotheses.map(function (h) {
-      const preuves = h.preuves || [];
-      let total = 0;
-      let on = 0;
-      preuves.forEach(function (id) {
-        const s = etat.data.signaux[id];
-        if (!s) return;
-        total += 1;
-        if (actives.has(s.langue)) on += 1;
-      });
-      const ratio = total ? on / total : 0;
-      const avis = etat.avis[h.id];
-      let facteur = 0.3 + 0.7 * ratio;
-      let widen = (1 - ratio) * 0.16;
-      if (avis === "non") {
-        facteur *= 0.28;
-        widen += 0.08;
-      } else if (avis === "oui") {
-        facteur = clamp(facteur * 1.08, 0, 1);
-      } else if (avis === "nsp") {
-        widen += 0.1;
-        facteur *= 0.9;
+    function est(kid, iid, base, evid, alts) {
+      const active = evid.filter(function (e) { return on.has(e); });
+      const ratio = evid.length ? active.length / evid.length : 0;
+      if (ratio < 0.25) {
+        return { id: iid, k: kid, status: "refused", reason: "NO_EVIDENCE", evid: active, alts: alts };
       }
-      const p = clamp(h.confiance * facteur, 0.04, 0.95);
-      const lo = clamp(h.intervalle[0] * facteur - widen * 0.25, 0, p);
-      const hi = clamp(h.intervalle[1] * facteur + widen, p, 1);
+      const p = clamp(base * (0.4 + 0.6 * ratio), 0.06, 0.9);
+      const w = 0.1 + (1 - ratio) * 0.16;
       return {
-        id: h.id,
-        etat: h.etat,
-        p: p,
-        lo: lo,
-        hi: hi,
-        preuves: preuves.filter(function (id) {
-          const s = etat.data.signaux[id];
-          return s && actives.has(s.langue);
-        }),
-        ratio: ratio,
-        avis: avis || null
+        id: iid, k: kid, status: "estimated",
+        p: p, lo: clamp(p - w, 0, 1), hi: clamp(p + w * 0.9, 0, 1),
+        evid: active, alts: alts
       };
-    }).sort(function (a, b) { return b.p - a.p; });
-  }
-
-  function confianceGlobale(hyps) {
-    const actives = languesActives();
-    const utiles = etat.data.langages.filter(function (l) { return l.necessaire; });
-    const n = utiles.filter(function (l) { return actives.has(l.id); }).length;
-    const couverture = utiles.length ? n / utiles.length : 0;
-    const avisNon = Object.keys(etat.avis).filter(function (k) { return etat.avis[k] === "non"; }).length;
-    const base = etat.data.confiance_globale.valeur * (0.45 + 0.55 * couverture);
-    const p = clamp(base - avisNon * 0.08, 0.12, 0.9);
-    const widen = (1 - couverture) * 0.14 + avisNon * 0.04;
-    return {
-      p: p,
-      lo: clamp(etat.data.confiance_globale.intervalle[0] * (0.5 + 0.5 * couverture) - widen, 0, p),
-      hi: clamp(etat.data.confiance_globale.intervalle[1] + widen, p, 1),
-      couverture: couverture
-    };
-  }
-
-  function el(tag, attrs, children) {
-    const node = document.createElement(tag);
-    if (attrs) {
-      Object.keys(attrs).forEach(function (k) {
-        if (k === "class") node.className = attrs[k];
-        else if (k === "html") node.innerHTML = attrs[k];
-        else if (k.indexOf("on") === 0) node.addEventListener(k.slice(2), attrs[k]);
-        else if (attrs[k] !== null && attrs[k] !== undefined) node.setAttribute(k, attrs[k]);
-      });
     }
-    (children || []).forEach(function (c) {
-      if (c == null) return;
-      node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
-    });
-    return node;
+
+    return [
+      est("k-charge", "i-charge", 0.28 + 0.32 * load + 0.18 * err + 0.14 * time + 0.12 * hrvLow,
+        ["e-hr", "e-hrv", "e-temps", "e-erreurs"],
+        ["effort", "excitation", "difficulté de tâche"]),
+      est("k-activation", "i-activation", 0.22 + 0.55 * load + 0.1 * hrvLow,
+        ["e-hr", "e-hrv"],
+        ["effort physique", "stress", "déplacement"]),
+      est("k-frustration", "i-frustration", 0.12 + 0.55 * err + 0.18 * time,
+        ["e-erreurs", "e-temps"],
+        ["charge", "consigne ambiguë"]),
+      est("k-effort", "i-effort", 0.08 + 0.25 * load,
+        ["e-hr"],
+        ["activation", "posture"])
+    ];
   }
 
-  function piste(p, lo, hi, label) {
-    const wrap = el("div", {
-      class: "estime",
-      role: "img",
-      "aria-label": label
-    });
-    wrap.style.setProperty("--p", String(p));
-    wrap.style.setProperty("--lo", String(lo));
-    wrap.style.setProperty("--hi", String(hi));
-    wrap.appendChild(el("span", { class: "estime-piste" }));
-    wrap.appendChild(el("span", { class: "estime-ci" }));
-    wrap.appendChild(el("span", { class: "estime-point" }));
-    return wrap;
-  }
-
-  function dots(q) {
-    const n = 5;
-    const on = Math.round(q * n);
-    const box = el("span", { class: "qualite", "aria-label": "Qualité " + pct(q) + " %" });
-    for (let i = 0; i < n; i++) {
-      box.appendChild(el("i", { class: i < on ? "on" : "" }));
+  function seedWalk() {
+    S.channels = S.onto.channels.map(function (c) { return Object.assign({}, c); });
+    S.hist = [];
+    let hr = 86, hrv = 0.62, errors = 0;
+    for (let t = 0; t <= 42; t++) {
+      hr += (Math.random() - 0.48) * 1.8 + 0.04 * (90 - hr);
+      hr = clamp(hr, 72, 112);
+      hrv += (Math.random() - 0.5) * 0.04 + 0.02 * (0.55 - hrv);
+      hrv = clamp(hrv, 0.25, 0.9);
+      if (Math.random() < 0.07) errors += 1;
+      const sample = { t: t, hr: hr, hrv: hrv, temps: t, errors: errors };
+      sample.estimates = infer(sample, onSet());
+      S.hist.push(sample);
     }
-    return box;
+    S.cursor = S.hist.length - 1;
   }
 
-  function renderLangages() {
-    const root = document.getElementById("langages");
-    if (!root.dataset.ready) {
-      etat.data.langages.forEach(function (l) {
-        const id = "lg-" + l.id;
-        const label = el("label", { class: "langue", "data-on": l.collecte ? "true" : "false", for: id });
-        const input = el("input", { type: "checkbox", id: id });
-        input.checked = !!l.collecte;
-        input.addEventListener("change", function () {
-          l.collecte = input.checked;
-          render();
-        });
-        label.appendChild(input);
-        label.appendChild(el("span", null, [
-          el("strong", null, [l.label]),
-          el("small", null, [l.categorie + " · " + l.justification])
-        ]));
-        root.appendChild(label);
-      });
-      root.dataset.ready = "1";
-    } else {
-      etat.data.langages.forEach(function (l) {
-        const label = root.querySelector('label[for="lg-' + l.id + '"]');
-        const input = document.getElementById("lg-" + l.id);
-        if (label) label.setAttribute("data-on", l.collecte ? "true" : "false");
-        if (input) input.checked = !!l.collecte;
-      });
-    }
-    const n = etat.data.langages.filter(function (l) { return l.collecte; }).length;
-    document.getElementById("langages-note").textContent =
-      n + " modalité" + (n > 1 ? "s" : "") + " active" + (n > 1 ? "s" : "") +
-      " · les autres restent hors collecte (minimisation).";
+  function tick() {
+    const last = S.hist[S.hist.length - 1];
+    const t = last.t + 1;
+    let hr = last.hr + (Math.random() - 0.48) * 1.7 + 0.03 * (91 - last.hr);
+    hr = clamp(hr, 72, 114);
+    let hrv = clamp(last.hrv + (Math.random() - 0.5) * 0.035, 0.22, 0.92);
+    let errors = last.errors + (Math.random() < 0.06 ? 1 : 0);
+    const sample = { t: t, hr: hr, hrv: hrv, temps: t, errors: errors };
+    sample.estimates = infer(sample, onSet());
+    S.hist.push(sample);
+    if (S.hist.length > MAX) S.hist.shift();
+    S.cursor = S.hist.length - 1;
+    draw();
   }
 
-  function fmtSignal(id, s) {
-    if (id === "frequence_cardiaque") {
-      return s.valeur + " bpm · +" + s.ecart_bpm + " vs repos " +
-        etat.data.individu.ligne_de_base.frequence_cardiaque_repos;
-    }
-    if (id === "variabilite_cardiaque") return "↓ relative à la ligne de base";
-    if (id === "temps_sur_tache") return s.valeur + " min";
-    if (id === "erreurs_recentes") return String(s.valeur);
-    return String(s.valeur);
+  function now() { return S.hist[S.cursor] || S.hist[S.hist.length - 1]; }
+
+  function recomputeFrom(i) {
+    const on = onSet();
+    for (; i < S.hist.length; i++) S.hist[i].estimates = infer(S.hist[i], on);
   }
 
-  function renderSignaux() {
-    const root = document.getElementById("signaux");
-    root.replaceChildren();
-    const actives = languesActives();
-    let n = 0;
-    Object.keys(etat.data.signaux).forEach(function (id) {
-      const s = etat.data.signaux[id];
-      const meta = SIGNALS_META[id] || { label: id };
-      const on = actives.has(s.langue);
-      const row = el("div", { class: "row" });
-      const left = el("span", null, [meta.label]);
-      if (!on) {
-        row.appendChild(left);
-        row.appendChild(el("b", null, ["non collecté"]));
-        root.appendChild(row);
-        return;
+  function related(id) {
+    const set = new Set([id]);
+    const n = now();
+    if (!n) return set;
+    S.onto.constructs.forEach(function (k) {
+      if (k.id === id) {
+        set.add("i-" + k.id.slice(2));
+        (k.measuredBy || []).forEach(function (e) { set.add(e); });
       }
-      n += 1;
-      const right = el("span", { style: "display:flex;gap:10px;align-items:center;text-align:right" }, [
-        dots(s.qualite),
-        el("b", null, [fmtSignal(id, s)])
-      ]);
-      row.appendChild(left);
-      row.appendChild(right);
-      root.appendChild(row);
     });
-    if (n === 0) {
-      root.appendChild(el("p", { class: "note" }, [
-        "Aucune mesure : les hypothèses ci-contre deviennent très larges. C’est le comportement attendu de la minimisation."
-      ]));
-    } else {
-      root.appendChild(el("p", { class: "note" }, [
-        "Aucun tracé brut. Qualité = fiabilité d’acquisition simulée, pas une preuve d’émotion."
-      ]));
-    }
+    n.estimates.forEach(function (est) {
+      if (est.id === id || est.k === id) {
+        set.add(est.id); set.add(est.k);
+        est.evid.forEach(function (e) { set.add(e); });
+      }
+      if (est.evid.indexOf(id) >= 0) {
+        set.add(est.id); set.add(est.k);
+      }
+    });
+    return set;
   }
 
-  function renderHypotheses() {
-    const hyps = hypothesesCalculees();
-    const glob = confianceGlobale(hyps);
-    const root = document.getElementById("hypotheses");
-    root.replaceChildren();
-
-    const g = el("article", { class: "hypothese" });
-    g.appendChild(el("header", null, [
-      el("h3", null, ["Confiance globale du modèle"]),
-      el("span", { class: "ci" }, [pct(glob.p) + " % · [" + pct(glob.lo) + "–" + pct(glob.hi) + "]"])
-    ]));
-    g.appendChild(piste(glob.p, glob.lo, glob.hi,
-      "Confiance globale " + pct(glob.p) + " pour cent, intervalle " + pct(glob.lo) + " à " + pct(glob.hi)));
-    g.appendChild(el("p", { class: "note" }, [
-      "Confiance sur la représentation, pas une certitude intérieure. Couverture des modalités nécessaires : " +
-        pct(glob.couverture) + " %."
-    ]));
-    root.appendChild(g);
-
-    hyps.forEach(function (h) {
-      const art = el("article", { class: "hypothese", "data-id": h.id });
-      art.appendChild(el("header", null, [
-        el("h3", null, [h.etat]),
-        el("span", { class: "ci" }, [pct(h.p) + " % · [" + pct(h.lo) + "–" + pct(h.hi) + "]"])
-      ]));
-      art.appendChild(piste(h.p, h.lo, h.hi,
-        h.etat + " " + pct(h.p) + " pour cent, intervalle " + pct(h.lo) + " à " + pct(h.hi)));
-      const preuves = h.preuves.length
-        ? "Preuves : " + h.preuves.map(function (id) { return (SIGNALS_META[id] || { label: id }).label; }).join(", ") + "."
-        : "Aucune preuve active — données insuffisantes.";
-      art.appendChild(el("p", { class: "note" }, [preuves]));
-      const avis = el("div", { class: "avis", role: "group", "aria-label": "Corriger " + h.etat });
-      [
-        ["oui", "Ceci correspond"],
-        ["non", "Ceci ne correspond pas"],
-        ["nsp", "Je ne sais pas"]
-      ].forEach(function (pair) {
-        const btn = el("button", {
-          type: "button",
-          "aria-pressed": h.avis === pair[0] ? "true" : "false"
-        }, [pair[1]]);
-        btn.addEventListener("click", function () {
-          if (etat.avis[h.id] === pair[0]) delete etat.avis[h.id];
-          else etat.avis[h.id] = pair[0];
-          render();
-        });
-        avis.appendChild(btn);
+  function layout() {
+    const K = S.onto.constructs;
+    const E = S.channels;
+    const I = (now() && now().estimates) || [];
+    const pos = {};
+    function spread(list, y, key) {
+      const n = list.length;
+      list.forEach(function (item, i) {
+        const x = 90 + (n === 1 ? 410 : i * 820 / (n - 1));
+        pos[key(item)] = { x: x, y: y };
       });
-      art.appendChild(avis);
-      root.appendChild(art);
-    });
-
-    document.getElementById("alternatives").innerHTML =
-      "<strong>Le même signal cardiaque peut aussi indiquer</strong>" +
-      etat.data.alternatives.join(" · ") +
-      ". D’où l’intervalle, pas une émotion unique.";
-  }
-
-  function extraWiden() {
-    const glob = confianceGlobale(hypothesesCalculees());
-    return (1 - glob.couverture) * 0.12;
-  }
-
-  function renderChart() {
-    const widen = extraWiden();
-    const pts = etat.data.timeline.map(function (t) {
-      return {
-        label: t.label,
-        y: t.charge,
-        lo: clamp(t.lo - widen, 0, 1),
-        hi: clamp(t.hi + widen, 0, 1)
-      };
-    });
-    const w = 640;
-    const h = 176;
-    const pad = { l: 36, r: 12, t: 14, b: 28 };
-    const innerW = w - pad.l - pad.r;
-    const innerH = h - pad.t - pad.b;
-    const x = function (i) { return pad.l + (pts.length === 1 ? innerW / 2 : i * innerW / (pts.length - 1)); };
-    const y = function (v) { return pad.t + (1 - v) * innerH; };
-
-    let band = "";
-    pts.forEach(function (p, i) {
-      band += (i === 0 ? "M" : "L") + x(i).toFixed(1) + " " + y(p.hi).toFixed(1) + " ";
-    });
-    for (let i = pts.length - 1; i >= 0; i--) {
-      band += "L" + x(i).toFixed(1) + " " + y(pts[i].lo).toFixed(1) + " ";
     }
-    band += "Z";
+    spread(K, 88, function (k) { return k.id; });
+    spread(I, 278, function (e) { return e.id; });
+    spread(E, 500, function (c) { return c.id; });
+    return pos;
+  }
 
-    let line = "";
-    pts.forEach(function (p, i) {
-      line += (i === 0 ? "M" : "L") + x(i).toFixed(1) + " " + y(p.y).toFixed(1) + " ";
+  function drawGraph() {
+    const svg = document.getElementById("graph");
+    const n = now();
+    if (!n) return;
+    const pos = layout();
+    const rel = related(S.selected);
+    const show = S.layers;
+    let edges = "";
+    n.estimates.forEach(function (est) {
+      const pI = pos[est.id], pK = pos[est.k];
+      if (pI && pK && show.K && show.I) {
+        const hot = rel.has(est.id) || rel.has(est.k);
+        edges += '<path class="edge I' + (hot ? " on" : "") + '" d="M' + pK.x + " " + pK.y + " L" + pI.x + " " + pI.y + '"/>';
+      }
+      if (show.E && show.I && pI) {
+        est.evid.forEach(function (eid) {
+          const pE = pos[eid];
+          if (!pE) return;
+          const hot = rel.has(est.id) || rel.has(eid);
+          edges += '<path class="edge E' + (hot ? " on" : "") + '" d="M' + pE.x + " " + pE.y + " L" + pI.x + " " + pI.y + '"/>';
+        });
+      }
     });
 
-    const grid = [0, 0.5, 1].map(function (v) {
-      const yy = y(v).toFixed(1);
-      return '<line x1="' + pad.l + '" x2="' + (w - pad.r) + '" y1="' + yy + '" y2="' + yy +
-        '" stroke="#263352" stroke-dasharray="3 4"/>' +
-        '<text x="4" y="' + (Number(yy) + 4) + '" fill="#8ea2c9" font-size="10" font-family="ui-monospace, monospace">' +
-        Math.round(v * 100) + '</text>';
-    }).join("");
+    function node(id, label, layer, extra) {
+      if (!show[layer] || !pos[id]) return "";
+      const p = pos[id];
+      const hot = rel.has(id);
+      const col = layer === "K" ? "#8db4ff" : layer === "E" ? "#2dd4bf" : "#e4b15a";
+      const refused = extra && extra.status === "refused";
+      const off = extra && extra.off;
+      const stroke = refused ? "#fb7185" : off ? "#3a4660" : col;
+      const fill = hot ? stroke : "#0b1020";
+      const dash = layer === "I" || off || refused ? " stroke-dasharray=\"4 3\"" : "";
+      const r = hot ? 16 : 13;
+      return '<g class="node" data-id="' + id + '">' +
+        '<circle cx="' + p.x + '" cy="' + p.y + '" r="' + r + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="2"' + dash + '/>' +
+        '<text x="' + p.x + '" y="' + (p.y + 28) + '" text-anchor="middle">' + label + "</text></g>";
+    }
 
-    const dotsSvg = pts.map(function (p, i) {
-      return '<circle cx="' + x(i).toFixed(1) + '" cy="' + y(p.y).toFixed(1) +
-        '" r="4" fill="#edf2f7" stroke="#0b1020" stroke-width="2"/>';
-    }).join("");
+    let nodes = "";
+    S.onto.constructs.forEach(function (k) { nodes += node(k.id, k.label, "K"); });
+    n.estimates.forEach(function (est) {
+      const lab = S.onto.constructs.filter(function (k) { return k.id === est.k; })[0];
+      nodes += node(est.id, (lab ? lab.label : est.id) + (est.status === "refused" ? " · refus" : ""), "I", est);
+    });
+    S.channels.forEach(function (c) {
+      nodes += node(c.id, c.label + (c.on ? "" : " · off"), "E", { off: !c.on });
+    });
 
-    const svg =
-      '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="Charge cognitive estimée dans le temps, avec bande d’incertitude">' +
-      '<defs><pattern id="hachure" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">' +
-      '<line x1="0" y1="0" x2="0" y2="6" stroke="rgb(228 177 90 / 0.55)" stroke-width="2"/></pattern></defs>' +
-      grid +
-      '<path d="' + band + '" fill="url(#hachure)" opacity="0.9"/>' +
-      '<path d="' + line + '" fill="none" stroke="#2dd4bf" stroke-width="2"/>' +
-      dotsSvg +
-      "</svg>";
+    svg.innerHTML =
+      '<defs><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>' +
+      '<text x="24" y="36" fill="#8ea2c9" font-size="11" letter-spacing="2">KNOWLEDGE</text>' +
+      '<text x="24" y="226" fill="#8ea2c9" font-size="11" letter-spacing="2">INFERENCE</text>' +
+      '<text x="24" y="448" fill="#8ea2c9" font-size="11" letter-spacing="2">EVIDENCE</text>' +
+      edges + nodes;
 
-    document.getElementById("chart").innerHTML = svg;
-
-    const ticks = document.getElementById("ticks");
-    ticks.replaceChildren();
-    pts.forEach(function (p) {
-      const d = el("div", { class: "tick" }, [
-        el("b", null, [p.label]),
-        el("span", null, [pct(p.y) + " % · [" + pct(p.lo) + "–" + pct(p.hi) + "]"])
-      ]);
-      ticks.appendChild(d);
+    svg.querySelectorAll(".node").forEach(function (g) {
+      g.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        S.selected = g.getAttribute("data-id");
+        draw();
+      });
     });
   }
 
-  function renderAction() {
-    const root = document.getElementById("action");
-    root.replaceChildren();
-    const hyps = hypothesesCalculees();
-    const glob = confianceGlobale(hyps);
-    const a = etat.data.action_interface;
-    const tropPeu = glob.couverture < 0.4;
+  function spark(arr, w, h, color) {
+    if (!arr.length) return "";
+    const min = Math.min.apply(null, arr);
+    const max = Math.max.apply(null, arr);
+    const span = max - min || 1;
+    let d = "";
+    arr.forEach(function (v, i) {
+      const x = arr.length === 1 ? 0 : i * (w - 4) / (arr.length - 1);
+      const y = h - 4 - ((v - min) / span) * (h - 8);
+      d += (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1) + " ";
+    });
+    return '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="1.6"/>';
+  }
 
-    if (tropPeu) {
-      root.appendChild(el("p", null, [
-        "Données insuffisantes pour proposer une adaptation. Le système n’agit pas par défaut — c’est volontaire."
-      ]));
+  function drawWaves() {
+    const root = document.getElementById("waves");
+    const keys = [
+      { id: "e-hr", key: "hr", label: "FC", unit: "bpm" },
+      { id: "e-hrv", key: "hrv", label: "HRV", unit: "" },
+      { id: "e-temps", key: "temps", label: "Temps", unit: "s" },
+      { id: "e-erreurs", key: "errors", label: "Erreurs", unit: "" }
+    ];
+    const rel = related(S.selected);
+    root.replaceChildren();
+    keys.forEach(function (k) {
+      const ch = S.channels.filter(function (c) { return c.id === k.id; })[0];
+      const on = ch && ch.on;
+      const series = on ? S.hist.slice(0, S.cursor + 1).map(function (s) { return s[k.key]; }) : [];
+      const last = series.length ? series[series.length - 1] : null;
+      const box = document.createElement("div");
+      box.className = "wave";
+      box.dataset.sel = rel.has(k.id) ? "true" : "false";
+      const val = last == null ? "off" : (k.key === "hrv" ? last.toFixed(2) : String(Math.round(last * 10) / 10));
+      box.innerHTML = '<div class="meta"><span>' + k.label + '</span><b>' + val + (on && k.unit ? " " + k.unit : "") + "</b></div>" +
+        '<svg viewBox="0 0 200 54">' + (on ? spark(series, 200, 54, "#2dd4bf") : "") + "</svg>";
+      box.addEventListener("click", function () { S.selected = k.id; draw(); });
+      root.appendChild(box);
+    });
+  }
+
+  function drawFan() {
+    const svg = document.getElementById("fan");
+    const title = document.getElementById("fan-title");
+    let iid = "i-charge";
+    if (S.selected && S.selected.indexOf("i-") === 0) iid = S.selected;
+    else if (S.selected && S.selected.indexOf("k-") === 0) iid = "i-" + S.selected.slice(2);
+    const lab = S.onto.constructs.filter(function (k) { return "i-" + k.id.slice(2) === iid; })[0];
+    title.textContent = (lab ? lab.label : "Estimation") + " · fan chart";
+    const slice = S.hist.slice(0, S.cursor + 1);
+    const pts = slice.map(function (s) {
+      const est = s.estimates.filter(function (e) { return e.id === iid; })[0];
+      if (!est || est.status !== "estimated") return { y: null, lo: 0, hi: 1 };
+      return { y: est.p, lo: est.lo, hi: est.hi };
+    });
+    const w = 520, h = 170, pl = 28, pr = 8, pt = 10, pb = 18;
+    const iw = w - pl - pr, ih = h - pt - pb;
+    const x = function (i) { return pl + (pts.length < 2 ? iw / 2 : i * iw / (pts.length - 1)); };
+    const y = function (v) { return pt + (1 - v) * ih; };
+    let band = "", line = "";
+    const ok = [];
+    pts.forEach(function (p, i) { if (p.y != null) ok.push({ i: i, p: p }); });
+    if (!ok.length) {
+      svg.innerHTML = '<text x="28" y="90" fill="#8ea2c9" font-size="12">Refus d’estimer — preuves insuffisantes.</text>';
       return;
     }
-
-    root.appendChild(el("p", null, [
-      el("strong", { style: "color:var(--ink)" }, [a.titre])
-    ]));
-    root.appendChild(el("p", null, [a.detail]));
-    const labels = {
-      explicable: "explicable",
-      reversible: "réversible",
-      controle_utilisateur: "contrôle utilisateur"
-    };
-    const pills = el("div", { class: "pills" });
-    a.proprietes.forEach(function (p) {
-      pills.appendChild(el("span", { class: "pill" }, [labels[p] || p]));
+    ok.forEach(function (o, n) {
+      band += (n ? "L" : "M") + x(o.i).toFixed(1) + " " + y(o.p.hi).toFixed(1) + " ";
     });
-    root.appendChild(pills);
-    const ul = el("ul", { class: "declencheurs" });
-    a.declencheurs.forEach(function (d) { ul.appendChild(el("li", null, [d])); });
-    root.appendChild(ul);
-
-    const actions = el("div", { class: "actions" });
-    [
-      ["accepter", "Accepter l’aide", true],
-      ["autre", "Autre suggestion", false],
-      ["ignorer", "Ignorer", false]
-    ].forEach(function (item) {
-      const btn = el("button", {
-        type: "button",
-        class: item[2] ? "primary" : "",
-        "aria-pressed": etat.action === item[0] ? "true" : "false"
-      }, [item[1]]);
-      btn.addEventListener("click", function () {
-        etat.action = item[0];
-        render();
-      });
-      actions.appendChild(btn);
-    });
-    root.appendChild(actions);
-
-    if (etat.action === "accepter") {
-      root.appendChild(el("p", { class: "status" }, ["Aide proposée, réversible. Rien n’a été imposé."]));
-    } else if (etat.action === "autre") {
-      root.appendChild(el("p", { class: "status" }, ["Alternative : fractionner uniquement la prochaine étape, sans extraire d’autre signal."]));
-    } else if (etat.action === "ignorer") {
-      root.appendChild(el("p", { class: "status" }, ["Adaptation ignorée. Le modèle reste une suggestion."]));
+    for (let n = ok.length - 1; n >= 0; n--) {
+      band += "L" + x(ok[n].i).toFixed(1) + " " + y(ok[n].p.lo).toFixed(1) + " ";
     }
+    band += "Z";
+    ok.forEach(function (o, n) {
+      line += (n ? "L" : "M") + x(o.i).toFixed(1) + " " + y(o.p.y).toFixed(1) + " ";
+    });
+    svg.innerHTML =
+      '<defs><pattern id="hach" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">' +
+      '<line x1="0" y1="0" x2="0" y2="6" stroke="rgb(228 177 90 / 0.5)" stroke-width="2"/></pattern></defs>' +
+      '<line x1="' + pl + '" x2="' + (w - pr) + '" y1="' + y(0.5).toFixed(1) + '" y2="' + y(0.5).toFixed(1) + '" stroke="#263352" stroke-dasharray="3 4"/>' +
+      '<path d="' + band + '" fill="url(#hach)"/>' +
+      '<path d="' + line + '" fill="none" stroke="#2dd4bf" stroke-width="2"/>';
   }
 
-  function representation() {
-    const actives = languesActives();
-    const signaux = {};
-    Object.keys(etat.data.signaux).forEach(function (id) {
-      const s = etat.data.signaux[id];
-      if (!actives.has(s.langue)) return;
-      if (id === "frequence_cardiaque") signaux[id] = "élevée vs baseline";
-      else if (id === "variabilite_cardiaque") signaux[id] = "diminuée";
-      else if (id === "temps_sur_tache") signaux[id] = "long";
-      else signaux[id] = s.valeur;
-    });
-    const hyps = hypothesesCalculees().map(function (h) {
-      return {
-        etat: h.etat,
-        confiance: Number(h.p.toFixed(2)),
-        intervalle: [Number(h.lo.toFixed(2)), Number(h.hi.toFixed(2))],
-        correction_utilisateur: h.avis
-      };
-    });
-    const action = tropPeuAction()
-      ? "aucune — données insuffisantes"
-      : (etat.action === "ignorer" ? "aucune (ignorée)" : etat.data.action_interface.titre);
+  function piste(p, lo, hi) {
+    return '<div class="estime" style="--p:' + p + ";--lo:" + lo + ";--hi:" + hi +
+      '"><span class="estime-piste"></span><span class="estime-ci"></span><span class="estime-point"></span></div>';
+  }
 
-    return {
-      temps: "T3",
-      contexte: etat.data.contexte.cas,
-      simulation: true,
-      diagnostic_medical: false,
-      signaux: signaux,
-      hypotheses: hyps,
-      action_interface: action,
-      conservation: "session",
-      brut_conserve: false
+  function bodyMap() {
+    const slots = {
+      tete: { x: 60, y: 18 },
+      visage: { x: 60, y: 32 },
+      voix: { x: 60, y: 48 },
+      coeur: { x: 60, y: 78 },
+      souffle: { x: 86, y: 72 },
+      tache: { x: 28, y: 118 }
     };
+    let dots = "";
+    S.channels.forEach(function (c) {
+      const s = slots[c.slot];
+      if (!s) return;
+      const col = c.on ? "#2dd4bf" : "#3a4660";
+      dots += '<circle cx="' + s.x + '" cy="' + s.y + '" r="' + (c.on ? 5 : 3.5) + '" fill="' + col + '" stroke="#0b1020" stroke-width="1"/>';
+    });
+    return '<svg class="body" viewBox="0 0 120 150" aria-label="Carte des langages">' +
+      '<ellipse cx="60" cy="22" rx="14" ry="16" fill="none" stroke="#263352"/>' +
+      '<path d="M42 42 L60 50 L78 42 L84 110 L36 110 Z" fill="none" stroke="#263352"/>' +
+      '<path d="M36 110 L30 148 M84 110 L90 148" fill="none" stroke="#263352"/>' +
+      dots + "</svg>";
   }
 
-  function tropPeuAction() {
-    return confianceGlobale(hypothesesCalculees()).couverture < 0.4;
+  function currentEstimate() {
+    const n = now();
+    if (!n) return { n: null, est: null, k: null };
+    const rel = related(S.selected);
+    const est = n.estimates.filter(function (e) { return rel.has(e.id); })[0] ||
+      n.estimates.filter(function (e) { return e.id === "i-charge"; })[0] || null;
+    const k = S.onto.constructs.filter(function (c) { return c.id === (est && est.k); })[0] || null;
+    return { n: n, est: est, k: k };
   }
 
-  function renderStatut() {
-    const n = Object.keys(etat.avis).length;
-    const elStatut = document.getElementById("statut-controle");
-    if (etat.action === "ignorer") {
-      elStatut.textContent = "Vous avez ignoré l’adaptation. Contrôle conservé.";
-    } else if (n === 0) {
-      elStatut.textContent = "Aucune correction pour l’instant.";
+  function drawLangs() {
+    const root = document.getElementById("insp-langs");
+    if (root.dataset.ready) {
+      S.channels.forEach(function (c) {
+        const lab = root.querySelector('label[data-ch="' + c.id + '"]');
+        const inp = root.querySelector('input[data-ch="' + c.id + '"]');
+        if (lab) lab.setAttribute("data-on", c.on ? "true" : "false");
+        if (inp && document.activeElement !== inp) inp.checked = c.on;
+      });
+      return;
+    }
+    let html = '<div class="block"><p class="kicker">Langages · minimisation</p><div class="langs">';
+    S.channels.forEach(function (c) {
+      html += '<label class="lang" data-ch="' + c.id + '" data-on="' + c.on + '"><input type="checkbox" data-ch="' + c.id + '"' +
+        (c.on ? " checked" : "") + "> <span><strong>" + c.label + "</strong><small>" + c.slot + "</small></span></label>";
+    });
+    html += "</div></div>";
+    root.innerHTML = html;
+    root.dataset.ready = "1";
+    root.querySelectorAll("input[data-ch]").forEach(function (inp) {
+      inp.addEventListener("change", function () {
+        const ch = S.channels.filter(function (c) { return c.id === inp.getAttribute("data-ch"); })[0];
+        if (ch) ch.on = inp.checked;
+        recomputeFrom(0);
+        drawLangs();
+        document.getElementById("insp-body").innerHTML =
+          '<div class="block"><p class="kicker">Carte des signes</p>' + bodyMap() +
+          "<p>Points allumés = collecté. Ce n’est pas un jumeau mental.</p></div>";
+        draw();
+      });
+    });
+  }
+
+  function drawInsp() {
+    const { n, est, k } = currentEstimate();
+    if (!n) return;
+    const estRoot = document.getElementById("insp-est");
+    let html = '<div class="block"><p class="kicker">Inspecteur · ConstructEstimate</p>';
+    html += "<h2>" + (k ? k.label : "Observation") + "</h2>";
+    if (!est) {
+      html += "<p>Sélectionnez un nœud.</p>";
+    } else if (est.status === "refused") {
+      html += '<div class="refus">Refusal · ' + est.reason + " — le modèle n’invente pas. Rallumez une modalité nécessaire, ou acceptez le silence.</div>";
     } else {
-      elStatut.textContent = n + " interprétation" + (n > 1 ? "s" : "") + " annotée" + (n > 1 ? "s" : "") + " par vous.";
+      html += '<div class="row"><span>Estimation</span><b class="ci">' + pct(est.p) + " % · [" + pct(est.lo) + "–" + pct(est.hi) + "]</b></div>";
+      html += piste(est.p, est.lo, est.hi);
+      html += "<p>Preuves : " + (est.evid.join(", ") || "aucune") + ".</p>";
+      html += '<div class="alts">Hypothèses concurrentes : ' + est.alts.join(" · ") + "</div>";
     }
+    html += "</div>";
+    estRoot.innerHTML = html;
+
+    drawLangs();
+
+    const body = document.getElementById("insp-body");
+    if (!body.dataset.ready) {
+      body.innerHTML = '<div class="block"><p class="kicker">Carte des signes</p>' + bodyMap() +
+        "<p>Points allumés = collecté. Ce n’est pas un jumeau mental.</p></div>";
+      body.dataset.ready = "1";
+    }
+
+    const obj = {
+      construct: est && est.k,
+      value: est && est.status === "estimated" ? Number(est.p.toFixed(2)) : null,
+      uncertainty: est && est.status === "estimated" ? { lo: Number(est.lo.toFixed(2)), hi: Number(est.hi.toFixed(2)) } : null,
+      evidence_ids: est ? est.evid : [],
+      temporal_window: { center: "T0+" + n.t + "s", half_width: "1s" },
+      status: est ? est.status : "none",
+      simulation: true,
+      diagnostic_medical: false
+    };
+    document.getElementById("insp-json").innerHTML =
+      '<div class="block"><p class="kicker">Objet HCSM</p><pre class="json">' +
+      JSON.stringify(obj, null, 2) + "</pre></div>";
   }
 
-  function render() {
-    renderLangages();
-    renderSignaux();
-    renderHypotheses();
-    renderChart();
-    renderAction();
-    renderStatut();
-    document.getElementById("representation").textContent =
-      JSON.stringify(representation(), null, 2);
+  function drawChrome() {
+    const n = now();
+    document.getElementById("clock").textContent = fmtT(n ? n.t : 0);
+    const live = document.getElementById("live");
+    live.dataset.on = S.playing ? "true" : "false";
+    live.innerHTML = S.playing ? "<i></i> DIRECT · simulé" : "<i></i> PAUSE";
+    const btn = document.getElementById("btn-play");
+    btn.textContent = S.playing ? "Pause" : "Lecture";
+    btn.setAttribute("aria-pressed", S.playing ? "true" : "false");
+    const scrub = document.getElementById("scrub");
+    scrub.max = String(Math.max(0, S.hist.length - 1));
+    if (document.activeElement !== scrub) scrub.value = String(S.cursor);
+    document.getElementById("ctx").textContent =
+      "Résolution d’un problème · bureau · sim-001 · " +
+      S.channels.filter(function (c) { return c.on; }).length + " langages";
   }
 
-  async function chargerJson(path) {
+  function draw() {
+    drawChrome();
+    drawGraph();
+    drawWaves();
+    drawFan();
+    drawInsp();
+  }
+
+  function playLoop() {
+    if (S.timer) clearInterval(S.timer);
+    S.timer = setInterval(function () {
+      if (!S.playing) return;
+      if (document.hidden) return;
+      tick();
+    }, TICK_MS);
+  }
+
+  async function boot() {
     try {
-      const r = await fetch(path, { cache: "no-store" });
-      if (r.ok) return r.json();
+      const r = await fetch("data/ontology.json", { cache: "no-store" });
+      if (r.ok) S.onto = await r.json();
     } catch (e) { /* file:// */ }
-    return null;
+    seedWalk();
+    draw();
+    playLoop();
+
+    document.getElementById("btn-play").addEventListener("click", function () {
+      S.playing = !S.playing;
+      if (S.playing) S.cursor = S.hist.length - 1;
+      drawChrome();
+    });
+    document.getElementById("scrub").addEventListener("input", function (e) {
+      S.playing = false;
+      S.cursor = Number(e.target.value);
+      draw();
+    });
+    document.querySelectorAll(".rail [data-layer]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        const ly = b.getAttribute("data-layer");
+        S.layers[ly] = !S.layers[ly];
+        b.setAttribute("aria-pressed", S.layers[ly] ? "true" : "false");
+        drawGraph();
+      });
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.code !== "Space") return;
+      const tag = e.target.tagName;
+      if (tag === "INPUT" || tag === "BUTTON" || tag === "TEXTAREA" || tag === "A") return;
+      e.preventDefault();
+      S.playing = !S.playing;
+      drawChrome();
+    });
   }
 
-  async function charger() {
-    const json = await chargerJson("data/session-simulee.json");
-    if (json) {
-      Object.keys(FALLBACK.signaux).forEach(function (id) {
-        if (json.signaux && json.signaux[id] && !json.signaux[id].label) {
-          json.signaux[id].label = FALLBACK.signaux[id].label || SIGNALS_META[id].label;
-        }
-      });
-      return json;
-    }
-    return FALLBACK;
-  }
-
-  const VUES = {
-    decoder: {
-      titre: "Décodeur",
-      lede: "Observer les signes, comprendre le contexte, représenter les états, adapter l’interface — sans lire l’intérieur de la personne."
-    },
-    memoire: {
-      titre: "Mémoire multi-IA",
-      lede: "Une mémoire externe. Les modèles ne sont que des interfaces. L’original n’est jamais remplacé par l’extrait."
-    },
-    horizons: {
-      titre: "Horizons 2040",
-      lede: "Sept journées-types pour tester les lignes rouges du décodeur. Scénarios, pas des prévisions."
-    },
-    principes: {
-      titre: "Principes",
-      lede: "HTML sémantique, incertitude visible, minimisation par modalité — grammaire Cognitorium sans fausse précision."
-    }
-  };
-
-  function aller(id) {
-    document.querySelectorAll("[data-view]").forEach(function (v) {
-      v.hidden = v.getAttribute("data-view") !== id;
-    });
-    document.querySelectorAll(".nav-list button").forEach(function (b) {
-      if (b.getAttribute("data-go") === id) b.setAttribute("aria-current", "page");
-      else b.removeAttribute("aria-current");
-    });
-    const meta = VUES[id] || VUES.decoder;
-    document.getElementById("titre-vue").textContent = meta.titre;
-    document.getElementById("lede-vue").textContent = meta.lede;
-    if (history.replaceState) history.replaceState(null, "", "#" + id);
-    else location.hash = id;
-  }
-
-  function itemMem(kicker, titre, corps) {
-    return el("div", { class: "mem-item" }, [
-      el("div", { class: "who" }, [kicker]),
-      el("strong", { style: "display:block;margin:4px 0 2px" }, [titre]),
-      corps ? el("p", { class: "note" }, [corps]) : null
-    ]);
-  }
-
-  function renderMemoire(mem) {
-    if (!mem) return;
-    const conv = document.getElementById("mem-conv");
-    conv.replaceChildren();
-    mem.conversations.forEach(function (c) {
-      conv.appendChild(itemMem(c.ia + " · " + c.date, c.projet, c.sujets.join(" · ")));
-    });
-    const dec = document.getElementById("mem-dec");
-    dec.replaceChildren();
-    mem.decisions.forEach(function (d) {
-      dec.appendChild(itemMem(d.projet + " · " + d.statut, d.contenu, "source " + d.source));
-    });
-    const ide = document.getElementById("mem-idees");
-    ide.replaceChildren();
-    mem.idees.forEach(function (d) {
-      ide.appendChild(itemMem(d.source, d.contenu));
-    });
-    const q = document.getElementById("mem-q");
-    q.replaceChildren();
-    mem.questions.forEach(function (d) {
-      q.appendChild(itemMem(d.id, d.contenu));
-    });
-
-    const g = mem.graphe || [];
-    let edges = "";
-    const nodes = {};
-    g.forEach(function (t, i) {
-      nodes[t[0]] = true;
-      nodes[t[2]] = true;
-      const y = 28 + i * 28;
-      edges += '<text x="24" y="' + y + '" fill="#8ea2c9" font-size="12">' +
-        t[0] + " → " + t[1] + " → " + t[2] + "</text>";
-    });
-    document.getElementById("mem-graph").innerHTML =
-      '<svg class="graph-svg" viewBox="0 0 720 ' + (40 + g.length * 28) +
-      '" role="img" aria-label="Graphe des relations extraite de la mémoire">' +
-      edges + "</svg>";
-
-    const ctx = [
-      "PROJET",
-      "Language Decoder — couche langages / interface de Cognitorium",
-      "",
-      "CONTEXTE",
-      "Prototype HUD du 30 août 2026. Données simulées. Pas un diagnostic.",
-      "",
-      "DÉCISIONS EXISTANTES",
-      mem.decisions.map(function (d, i) { return (i + 1) + ". " + d.contenu; }).join("\n"),
-      "",
-      "QUESTIONS OUVERTES",
-      mem.questions.map(function (d) { return "- " + d.contenu; }).join("\n"),
-      "",
-      "TRAVAUX PRÉCÉDENTS",
-      mem.conversations.map(function (c) { return "- " + c.date + " · " + c.ia + " · " + c.projet; }).join("\n"),
-      "",
-      "INSTRUCTION",
-      "Continue la réflexion à partir de cet état, sans refaire ce qui a déjà été traité.",
-      "Garde l'inférence probabiliste, la minimisation, et le contrôle humain."
-    ].join("\n");
-    document.getElementById("contexte-ia").value = ctx;
-  }
-
-  function renderHorizons(data) {
-    if (!data) return;
-    const root = document.getElementById("domaines");
-    const detail = document.getElementById("domaine-detail");
-    let courant = data.domaines[0].id;
-
-    function paintDetail(d) {
-      detail.replaceChildren();
-      detail.appendChild(el("p", { class: "kicker" }, [d.emoji + " · scénario"]));
-      detail.appendChild(el("h2", null, [d.titre]));
-      detail.appendChild(el("p", null, [d.persona + " — " + d.quand]));
-      detail.appendChild(el("p", null, [d.accroche]));
-      const kpis = el("div", { class: "kpis" });
-      d.kpis.forEach(function (k) {
-        kpis.appendChild(el("div", { class: "kpi" }, [
-          el("b", null, [k.valeur]),
-          el("span", null, [k.label])
-        ]));
-      });
-      detail.appendChild(kpis);
-      const jour = el("div", { class: "journee" });
-      d.journee.forEach(function (b) {
-        const pills = el("div", { class: "pills" });
-        (b.tags || []).forEach(function (t) { pills.appendChild(el("span", { class: "pill" }, [t])); });
-        jour.appendChild(el("div", { class: "beat" }, [
-          el("time", null, [b.h]),
-          el("div", null, [
-            el("strong", null, [b.titre]),
-            el("p", { class: "note" }, [b.texte]),
-            pills
-          ])
-        ]));
-      });
-      detail.appendChild(jour);
-      const aa = el("div", { class: "aa" });
-      d.avant_apres.forEach(function (p) {
-        aa.appendChild(el("div", null, [
-          el("span", { class: "from" }, [p[0]]),
-          el("span", { class: "muted" }, ["→"]),
-          el("span", { class: "to" }, [p[1]])
-        ]));
-      });
-      detail.appendChild(aa);
-      detail.appendChild(el("p", { class: "tension" }, ["Lecture Decoder — " + d.lien_decoder]));
-    }
-
-    function paintList() {
-      root.replaceChildren();
-      data.domaines.forEach(function (d) {
-        const btn = el("button", {
-          type: "button",
-          class: "domaine",
-          "aria-pressed": d.id === courant ? "true" : "false"
-        }, [
-          el("span", { class: "em" }, [d.emoji]),
-          el("h3", null, [d.titre]),
-          el("p", null, [d.persona])
-        ]);
-        btn.addEventListener("click", function () {
-          courant = d.id;
-          paintList();
-          paintDetail(d);
-        });
-        root.appendChild(btn);
-      });
-    }
-    paintList();
-    paintDetail(data.domaines[0]);
-  }
-
-  document.addEventListener("DOMContentLoaded", async function () {
-    etat.data = await charger();
-    if (!etat.data.signaux.frequence_cardiaque.ecart_bpm) {
-      etat.data.signaux.frequence_cardiaque.ecart_bpm = 24;
-    }
-    render();
-
-    const mem = await chargerJson("data/memoire.json");
-    const hor = await chargerJson("data/monde-2040.json");
-    renderMemoire(mem);
-    renderHorizons(hor);
-
-    document.querySelectorAll(".nav-list button").forEach(function (b) {
-      b.addEventListener("click", function () { aller(b.getAttribute("data-go")); });
-    });
-    const copy = document.getElementById("btn-copier");
-    if (copy) {
-      copy.addEventListener("click", async function () {
-        const t = document.getElementById("contexte-ia").value;
-        try {
-          await navigator.clipboard.writeText(t);
-          copy.textContent = "Copié";
-        } catch (e) {
-          document.getElementById("contexte-ia").select();
-          copy.textContent = "Sélectionné — Ctrl+C";
-        }
-      });
-    }
-
-    const hash = (location.hash || "").replace("#", "");
-    if (VUES[hash]) aller(hash);
-  });
+  document.addEventListener("DOMContentLoaded", boot);
 })();

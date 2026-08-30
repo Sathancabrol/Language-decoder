@@ -3,257 +3,71 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Language Decoder — prototype HUD : langages de l’humain, mémoire multi-IA, horizons 2040. Inférence probabiliste, minimisation, pas de diagnostic.">
-  <title>Language Decoder</title>
+  <meta name="description" content="Cognitorium Representation Engine — visualisation temps réel, vues coordonnées, incertitude visible. Pas un générateur de code, pas un diagnostic.">
+  <title>Cognitorium — Representation Engine</title>
   <link rel="stylesheet" href="css/dashboard.css">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' rx='4' fill='none' stroke='%237dd3fc' stroke-width='2'/%3E%3Cpath d='M6 18h4l2-6 3 12 3-8 2 2h6' fill='none' stroke='%237dd3fc' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' rx='4' fill='none' stroke='%232dd4bf' stroke-width='2'/%3E%3Cpath d='M6 18h4l2-6 3 12 3-8 2 2h6' fill='none' stroke='%232dd4bf' stroke-width='2'/%3E%3C/svg%3E">
 </head>
 <body>
-  <a class="skip" href="#contenu">Aller au contenu</a>
+  <a class="skip" href="#stage">Aller à la scène</a>
 
-  <div class="shell">
-    <aside class="nav" aria-label="Vues">
-      <div class="nav-brand">
+  <div class="app">
+    <header class="bar">
+      <div class="brand">
         <svg viewBox="0 0 32 32" aria-hidden="true">
           <rect x="3" y="3" width="26" height="26" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
           <path d="M6 18h4l2-6 3 12 3-8 2 2h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
         </svg>
         <div>
           <strong>COGNITORIUM</strong>
-          <b>Language Decoder</b>
+          <b>Representation Engine</b>
         </div>
       </div>
-      <ul class="nav-list">
-        <li><button type="button" data-go="decoder" aria-current="page">Décodeur<small>Mesure · inférence · action</small></button></li>
-        <li><button type="button" data-go="memoire">Mémoire<small>Conversations ≠ extraits</small></button></li>
-        <li><button type="button" data-go="horizons">Horizons 2040<small>Scénarios, pas prévisions</small></button></li>
-        <li><button type="button" data-go="principes">Principes<small>HTML · incertitude · min.</small></button></li>
-      </ul>
-      <p class="nav-foot">
-        Visuels : dépôt Cognitorium.<br>
-        Données simulées · session seule.<br>
-        <a href="docs/README.md">docs/</a>
-      </p>
+      <div class="live" id="live" data-on="true"><i></i> DIRECT · simulé</div>
+      <div class="clock" id="clock" aria-live="off">T0 + 00:00</div>
+      <div class="ctx" id="ctx">Résolution d’un problème · bureau · sim-001</div>
+      <div class="transport">
+        <button type="button" class="primary" id="btn-play" aria-pressed="true">Pause</button>
+        <input type="range" id="scrub" min="0" max="0" value="0" aria-label="Parcourir le temps">
+      </div>
+    </header>
+
+    <nav class="rail" aria-label="Couches HCSM">
+      <button type="button" data-layer="K" aria-pressed="true" title="Knowledge — ce que la science sait">
+        <span class="ly">K</span><small>Savoir</small>
+      </button>
+      <button type="button" data-layer="E" aria-pressed="true" title="Evidence — ce qui est observé">
+        <span class="ly">E</span><small>Preuve</small>
+      </button>
+      <button type="button" data-layer="I" aria-pressed="true" title="Inference — ce que l’on peut conclure">
+        <span class="ly">I</span><small>Inférer</small>
+      </button>
+      <div class="spacer"></div>
+      <a href="docs/outil-visualisation.md">doc</a>
+    </nav>
+
+    <main class="stage" id="stage">
+      <svg class="graph" id="graph" viewBox="0 0 1000 620" role="img" aria-label="Graphe coordonné knowledge, evidence, inference"></svg>
+      <p class="hint">Une information, plusieurs projections. K = science · E = mesure · I = hypothèse. Cliquer un nœud lie toutes les vues.</p>
+    </main>
+
+    <aside class="insp" id="insp" aria-label="Inspecteur">
+      <div id="insp-est"></div>
+      <div id="insp-langs"></div>
+      <div id="insp-body"></div>
+      <div id="insp-json"></div>
     </aside>
 
-    <div class="workspace">
-      <header class="top">
-        <div>
-          <h1 id="titre-vue">Décodeur</h1>
-          <p class="lede" id="lede-vue">Observer les signes, comprendre le contexte, représenter les états, adapter l’interface — sans lire l’intérieur de la personne.</p>
-        </div>
-        <div class="badges">
-          <span class="badge ok">Données simulées</span>
-          <span class="badge">Minimisation active</span>
-          <span class="badge">30 août 2026</span>
-        </div>
-      </header>
-
-      <noscript>
-        <p class="card">JavaScript est requis pour le HUD. Les originaux sont dans <a href="docs/conversations/">docs/conversations/</a>, la mémoire dans <a href="data/memoire.json">data/memoire.json</a>.</p>
-      </noscript>
-
-      <div id="contenu">
-        <section class="view" data-view="decoder">
-          <div class="kpis" id="kpis-session"></div>
-          <ol class="pipeline" aria-label="Chaîne de raisonnement">
-            <li><span class="n">1</span><strong>Observer</strong><span>Signes multimodaux</span></li>
-            <li><span class="n">2</span><strong>Contextualiser</strong><span>Tâche, temps, baseline</span></li>
-            <li><span class="n">3</span><strong>Inférer</strong><span>Hypothèses, pas lecture</span></li>
-            <li><span class="n">4</span><strong>Prévoir</strong><span>Tendance T1…Tn</span></li>
-            <li><span class="n">5</span><strong>Adapter</strong><span>Action réversible</span></li>
-          </ol>
-
-          <div class="grid">
-            <section class="card span-8" aria-labelledby="cas-titre">
-              <p class="kicker">Contexte</p>
-              <h2 id="cas-titre">Cas d’étude</h2>
-              <p>Résolution d’un problème — bureau, travail individuel — 21:07.</p>
-              <div class="meta-list">
-                <div class="row"><span>Individu</span><b>sim-001 · anonyme</b></div>
-                <div class="row"><span>Ligne de base cardiaque</span><b>68 bpm au repos</b></div>
-                <div class="row"><span>Durée sur la tâche</span><b>14 min</b></div>
-                <div class="row"><span>Finalité</span><b>adapter l’interface, session seulement</b></div>
-              </div>
-            </section>
-
-            <aside class="card span-4" aria-labelledby="radar-titre">
-              <p class="kicker mesure">Couverture</p>
-              <h2 id="radar-titre">Langages actifs</h2>
-              <p>Radar de <em>collecte</em>, pas un score de personnalité.</p>
-              <div class="radar-wrap">
-                <div id="radar"></div>
-                <p class="legend-r" id="radar-legende"></p>
-              </div>
-            </aside>
-
-            <section class="card span-12" aria-labelledby="langages-titre">
-              <p class="kicker mesure">Langages de l’humain</p>
-              <h2 id="langages-titre">Modalités — minimisation</h2>
-              <p>Signes incarnés, ambigus, liés au contexte. Décochez : le modèle continue, avec plus d’incertitude.</p>
-              <div class="langues" id="langages"></div>
-              <p class="note" id="langages-note"></p>
-            </section>
-
-            <section class="card measure span-6" aria-labelledby="signaux-titre" data-kind="measure">
-              <p class="kicker mesure">Mesure · trait plein</p>
-              <h2 id="signaux-titre">Signaux observés</h2>
-              <p>Caractéristiques, pas de brut. Comparaison à la ligne de base.</p>
-              <div id="signaux"></div>
-            </section>
-
-            <section class="card infer span-6" aria-labelledby="etats-titre" data-kind="inference">
-              <p class="kicker infere">Inférence · hachuré</p>
-              <h2 id="etats-titre">États estimés</h2>
-              <p>Hypothèses non exclusives. Un même signal, plusieurs états.</p>
-              <div class="hypotheses" id="hypotheses" aria-live="polite"></div>
-              <div class="alts" id="alternatives"></div>
-            </section>
-
-            <section class="card span-12" aria-labelledby="temps-titre">
-              <p class="kicker infere">Temps</p>
-              <h2 id="temps-titre">Évolution T1 → maintenant</h2>
-              <p>Aire hachurée = intervalle. La ligne n’est pas une vérité intérieure.</p>
-              <div class="chart-wrap" id="chart"></div>
-              <div class="ticks" id="ticks"></div>
-            </section>
-
-            <section class="card span-7" aria-labelledby="action-titre" data-kind="action">
-              <p class="kicker">Action d’interface</p>
-              <h2 id="action-titre">Recommandation</h2>
-              <div id="action"></div>
-            </section>
-
-            <section class="card span-5" aria-labelledby="controle-titre">
-              <p class="kicker">Contrôle</p>
-              <h2 id="controle-titre">L’humain tranche</h2>
-              <p>Le modèle propose. Pas un diagnostic. Pas un facteur d’auth.</p>
-              <p class="status" id="statut-controle" aria-live="polite">Aucune correction pour l’instant.</p>
-              <div class="meta-list">
-                <div class="row"><span>Brut ECG / EEG / audio</span><b>non conservé</b></div>
-                <div class="row"><span>Durée</span><b>session</b></div>
-                <div class="row"><span>Tiers</span><b>aucun</b></div>
-              </div>
-            </section>
-
-            <section class="card span-12" aria-labelledby="repr-titre">
-              <p class="kicker">Représentation</p>
-              <h2 id="repr-titre">Modèle de l’observation</h2>
-              <p>Données · hypothèses · décision. Étape « se représenter l’objet ».</p>
-              <pre class="minijson" id="representation" tabindex="0"></pre>
-            </section>
-          </div>
-        </section>
-
-        <section class="view" data-view="memoire" hidden>
-          <div class="grid">
-            <article class="card span-12">
-              <p class="kicker">PAM · V1 de ce dépôt</p>
-              <h2>Conversation ≠ mémoire</h2>
-              <p>Les originaux restent dans <a href="docs/conversations/">docs/conversations/</a>. Ici : extraits exploitables, provenance visible, contexte à coller dans une autre IA.</p>
-            </article>
-            <article class="card span-6">
-              <p class="kicker">Journal</p>
-              <h2>Conversations</h2>
-              <div class="mem-list" id="mem-conv"></div>
-            </article>
-            <article class="card span-6">
-              <p class="kicker">Extrait</p>
-              <h2>Décisions en vigueur</h2>
-              <div class="mem-list" id="mem-dec"></div>
-            </article>
-            <article class="card span-6">
-              <p class="kicker">Extrait</p>
-              <h2>Idées</h2>
-              <div class="mem-list" id="mem-idees"></div>
-            </article>
-            <article class="card span-6">
-              <p class="kicker">Ouvert</p>
-              <h2>Questions</h2>
-              <div class="mem-list" id="mem-q"></div>
-            </article>
-            <article class="card span-12">
-              <p class="kicker">Graphe</p>
-              <h2>Relations (V1 manuel)</h2>
-              <div id="mem-graph"></div>
-            </article>
-            <article class="card span-12">
-              <p class="kicker">Killer feature</p>
-              <h2>Continuer avec une IA</h2>
-              <p>Copier ce contexte vers Claude, GPT, Kimi, Arena… Sans refaire ce qui est déjà tranché.</p>
-              <textarea class="minijson ctxbox" id="contexte-ia" readonly></textarea>
-              <div class="actions">
-                <button type="button" class="primary" id="btn-copier">Copier le contexte</button>
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <section class="view" data-view="horizons" hidden>
-          <div class="grid">
-            <article class="card span-12">
-              <p class="kicker">Scénarios · 2040–2045</p>
-              <h2>Sept domaines, une grammaire visuelle</h2>
-              <p>Persona · journée · 4 KPI · avant/après — format pris sur l’export 2040, à réutiliser pour un livrable. Ce ne sont pas des mesures du décodeur. Chaque carte porte une <strong>lecture</strong> (alignement ou ligne rouge).</p>
-            </article>
-            <div class="span-12 domaines" id="domaines"></div>
-            <article class="card span-12" id="domaine-detail"></article>
-          </div>
-        </section>
-
-        <section class="view" data-view="principes" hidden>
-          <div class="principes">
-            <article class="card">
-              <p class="kicker">Format</p>
-              <h2>HTML</h2>
-              <p>HTML5 sémantique, <code>lang="fr"</code>, CSS/JS locaux, JSON à part. Pas de CDN, pas de <code>meter</code> pour une hypothèse.</p>
-              <ul>
-                <li>Landmarks et un seul h1</li>
-                <li><code>data-kind</code> measure / inference / action</li>
-                <li>Progressive enhancement</li>
-              </ul>
-              <p class="note"><a href="docs/format-html.md">docs/format-html.md</a></p>
-            </article>
-            <article class="card infer">
-              <p class="kicker infere">Vue</p>
-              <h2>Incertitude</h2>
-              <p>Point + intervalle, hypothèses concurrentes, hachure = inféré, baseline, preuves, correction.</p>
-              <ul>
-                <li>Pas de feu tricolore</li>
-                <li>Pas de camembert d’émotions</li>
-                <li>Pas de « résilience 82 % » façon visuel Cognitorium</li>
-              </ul>
-              <p class="note"><a href="docs/incertitude.md">docs/incertitude.md</a></p>
-            </article>
-            <article class="card measure">
-              <p class="kicker mesure">Données</p>
-              <h2>Minimisation</h2>
-              <p>Features de session, consentement par modalité, EEG/audio/visage off, pas d’auth biométrique.</p>
-              <ul>
-                <li>Moins de signaux → intervalles plus larges</li>
-                <li>Pas un diagnostic</li>
-                <li>Pas un coffre-fort à ouvrir à 68 %</li>
-              </ul>
-              <p class="note"><a href="docs/minimisation.md">docs/minimisation.md</a></p>
-            </article>
-          </div>
-          <article class="card" style="margin-top:14px">
-            <p class="kicker">Design</p>
-            <h2>Ce qu’on prend aux visuels Cognitorium</h2>
-            <p>HUD verre, sidebar, kickers, timeline, graphe, radar de <em>couverture</em>, 4 KPI, hub de sources. On refuse le jumeau qui lit l’esprit, les millions de nœuds décoratifs, les débuffs. Détail : <a href="docs/design-visuel.md">docs/design-visuel.md</a>.</p>
-          </article>
-        </section>
+    <footer class="strip">
+      <div class="waves">
+        <h3>Signaux · features (pas de brut)</h3>
+        <div class="wave-grid" id="waves"></div>
       </div>
-
-      <footer class="pied">
-        <span>Prototype conceptuel · recherche et design · ne constitue pas un diagnostic médical.</span>
-        <span>
-          <a href="docs/discussion.md">Discussion</a>
-          · <a href="docs/memoire/">Mémoire</a>
-          · <a href="docs/design-visuel.md">Design</a>
-        </span>
-      </footer>
-    </div>
+      <div class="fanbox">
+        <h3 id="fan-title">Charge cognitive · fan chart</h3>
+        <svg id="fan" viewBox="0 0 520 170" role="img" aria-label="Évolution avec bande d’incertitude"></svg>
+      </div>
+    </footer>
   </div>
 
   <script src="js/dashboard.js"></script>

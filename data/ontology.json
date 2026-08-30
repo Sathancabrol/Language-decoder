@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "slice": "knowledge-graph",
+    "note": "Aucun nœud n'est une personne. Aucune arête n'est un état."
+  },
+  "constructs": [
+    {
+      "id": "k-charge",
+      "label": "Charge cognitive",
+      "kind": "construct",
+      "measuredBy": ["e-hr", "e-hrv", "e-temps", "e-erreurs"]
+    },
+    {
+      "id": "k-activation",
+      "label": "Activation",
+      "kind": "construct",
+      "measuredBy": ["e-hr", "e-hrv"]
+    },
+    {
+      "id": "k-frustration",
+      "label": "Frustration",
+      "kind": "construct",
+      "measuredBy": ["e-erreurs", "e-temps"]
+    },
+    {
+      "id": "k-effort",
+      "label": "Effort physique",
+      "kind": "construct",
+      "measuredBy": ["e-hr"]
+    }
+  ],
+  "channels": [
+    { "id": "e-hr", "label": "FC", "langue": "cardio_features", "unite": "bpm", "baseline": 68, "on": true, "slot": "coeur" },
+    { "id": "e-hrv", "label": "HRV", "langue": "cardio_features", "unite": "rel", "on": true, "slot": "coeur" },
+    { "id": "e-temps", "label": "Temps tâche", "langue": "comportement_tache", "unite": "s", "on": true, "slot": "tache" },
+    { "id": "e-erreurs", "label": "Erreurs", "langue": "comportement_tache", "unite": "n", "on": true, "slot": "tache" },
+    { "id": "e-resp", "label": "Respiration", "langue": "respiration", "on": false, "slot": "souffle" },
+    { "id": "e-eeg", "label": "EEG / BCI", "langue": "eeg_bci", "on": false, "slot": "tete" },
+    { "id": "e-parole", "label": "Parole", "langue": "parole_audio", "on": false, "slot": "voix" },
+    { "id": "e-video", "label": "Vidéo", "langue": "video_visage", "on": false, "slot": "visage" }
+  ]
+}

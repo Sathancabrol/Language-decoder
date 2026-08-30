@@ -28,4 +28,6 @@ Les originaux ne sont jamais remplacés par la synthèse.
 | [minimisation.md](minimisation.md) | Données minimales |
 | [design-visuel.md](design-visuel.md) | Grammaire HUD Cognitorium, sans fausse précision |
 
-Machine-readable : `data/session-simulee.json`, `data/memoire.json`, `data/monde-2040.json`.
+Machine-readable : `data/session-simulee.json`, `data/memoire.json`, `data/monde-2040.json`, `data/ontology.json`.
+
+L’instrument live (seul produit de ce dépôt pour l’instant) : [`outil-visualisation.md`](outil-visualisation.md).

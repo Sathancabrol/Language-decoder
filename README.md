@@ -1,60 +1,52 @@
-# Language Decoder
+# Cognitorium — Representation Engine
 
-Prototype HUD pour **lire les langages de l’humain sans prétendre lire son intérieur**.
+**Outil de visualisation temps réel.** Pas le générateur de code.
 
-Couche langages / interface de [Cognitorium](https://github.com/Sathancabrol/COGNITORIUM) : observer des signes, les relier au contexte et au temps, estimer des états **avec incertitude**, adapter l’interface — explicable, réversible, minimale.
+Cognitorium, dans l’idée finale, n’est pas « une appli avec un graphe ». C’est un **moteur de représentation multimodale** : une même information a plusieurs projections coordonnées. Ce dépôt produit **uniquement** l’instrument qui affiche les données en direct.
 
-Quatre vues :
+```
+INFORMATION → structure → encodage → projection → VUES COORDONNÉES
+```
 
-1. **Décodeur** — mesures, hypothèses, action
-2. **Mémoire** — conversations ≠ extraits, contexte à coller dans une autre IA
-3. **Horizons 2040** — sept scénarios pour tester les lignes rouges
-4. **Principes** — HTML, incertitude, minimisation
+Les données sont **simulées**. Ce n’est pas un diagnostic, pas un jumeau mental, pas un outil d’auth.
 
-Les données sont **simulées**. Ce n’est pas un diagnostic médical.
-
-> Observer les signes, comprendre le contexte, représenter les états, anticiper les besoins et adapter l’interface.
-
-## Ouvrir
+## Lancer
 
 ```bash
 python3 -m http.server 8080
 ```
 
-Puis `http://localhost:8080`. Ancres : `#decoder` `#memoire` `#horizons` `#principes`.
+Ouvrir `http://localhost:8080`. Espace = lecture / pause.
 
-## Dépôt
+## Ce que l’instrument montre (toujours les mêmes données)
 
-```
-├── index.html
-├── css/dashboard.css          # HUD Cognitorium (teal / verre / sidebar)
-├── js/dashboard.js
-├── data/
-│   ├── session-simulee.json   # contrat décodeur
-│   ├── memoire.json           # décisions / idées / questions
-│   └── monde-2040.json        # 7 domaines, lecture Decoder
-└── docs/
-    ├── conversations/         # journaux bruts (jamais écrasés)
-    ├── memoire/               # extraits
-    ├── design-visuel.md       # ce qu'on prend / refuse des visuels Cognitorium
-    ├── discussion.md
-    ├── format-html.md
-    ├── incertitude.md
-    └── minimisation.md
-```
+| Vue | Question |
+| --- | --- |
+| Graphe **K / E / I** | Science ≠ mesure ≠ inférence (HCSM) |
+| Oscillogrammes | Features live (pas de brut ECG) |
+| Fan chart | Temps + incertitude |
+| Inspecteur | `ConstructEstimate` (valeur, intervalle, preuves, alternatives, refus) |
+| Carte des signes | D’où vient le langage, pas un avatar de l’âme |
+| Langages on/off | Minimisation : moins de preuves → intervalle plus large ou `Refusal` |
 
-## Cadrage
+Cliquer un nœud **lie** toutes les vues. Couches K, E, I dans le rail : masquer sans détruire.
 
-**HTML** — sémantique, local, JSON à part. Pas de `<meter>` pour une hypothèse. [`docs/format-html.md`](docs/format-html.md)
+## Périmètre
 
-**Incertitude** — point + intervalle, hypothèses concurrentes, hachure = inféré. Pas de feu tricolore, pas de « résilience 82 % ». [`docs/incertitude.md`](docs/incertitude.md)
+| Dans cet outil | Plus tard (autre outil) |
+| --- | --- |
+| Affichage live | Génération de code |
+| Vues coordonnées | Distilleur d’expériences |
+| Incertitude, provenance, refus | Connecteurs GPT / Claude / capteurs réels |
+| | ROME, skill tree carrière, learning engine |
 
-**Minimisation** — features de session, EEG / audio / visage off, pas d’auth biométrique. Moins de signaux → intervalles plus larges. [`docs/minimisation.md`](docs/minimisation.md)
+Voir [`docs/outil-visualisation.md`](docs/outil-visualisation.md).
 
-**Mémoire multi-IA** — centraliser le *contexte*, pas seulement les fichiers. V1 de ce dépôt : originaux + extraits + bouton « Continuer avec une IA ». [`docs/conversations/2026-08-30-memoire-multi-ia.md`](docs/conversations/2026-08-30-memoire-multi-ia.md)
+## Principes conservés
 
-**Visuels Cognitorium** — HUD, sidebar, radar de *couverture* (modalités collectées), 4 KPI, timeline, graphe. On refuse le jumeau qui lit l’esprit. [`docs/design-visuel.md`](docs/design-visuel.md)
+- Inférence probabiliste, jamais lecture intérieure
+- Point + intervalle, hypothèses concurrentes
+- Minimisation par modalité
+- HTML5 local, sans CDN
 
-## Suite livrable
-
-Conserver le JSON, les `data-kind`, les classes d’incertitude, la séparation conversation / mémoire. Ne pas diluer : incertitude, minimisation, contrôle humain, pas de diagnostic.
+Notes et mémoire : [`docs/`](docs/).
