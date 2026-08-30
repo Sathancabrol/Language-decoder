@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Prototype de dashboard pour représenter les langages de l’humain, l’incertitude des inférences et la minimisation des données.">
+  <title>Language Decoder</title>
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' rx='4' fill='none' stroke='%231f4f4a' stroke-width='2'/%3E%3Cpath d='M6 18h4l2-6 3 12 3-8 2 2h6' fill='none' stroke='%231f4f4a' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+</head>
+<body>
+  <a class="skip" href="#contenu">Aller au contenu</a>
+
+  <div class="page">
+    <header class="top">
+      <div class="brand">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="3" y="3" width="26" height="26" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M6 18h4l2-6 3 12 3-8 2 2h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <h1>Language Decoder</h1>
+          <p class="lede">Observer les signes, comprendre le contexte, représenter les états, adapter l’interface — sans lire l’intérieur de la personne.</p>
+        </div>
+      </div>
+      <div class="badges">
+        <span class="badge ok">Données simulées</span>
+        <span class="badge">Minimisation active</span>
+        <span class="badge">30 août 2026</span>
+      </div>
+    </header>
+
+    <ol class="pipeline" aria-label="Chaîne de raisonnement">
+      <li><span class="n">1</span><strong>Observer</strong><span>Signes multimodaux</span></li>
+      <li><span class="n">2</span><strong>Contextualiser</strong><span>Tâche, temps, baseline</span></li>
+      <li><span class="n">3</span><strong>Inférer</strong><span>Hypothèses, pas lecture</span></li>
+      <li><span class="n">4</span><strong>Prévoir</strong><span>Tendance T1…Tn</span></li>
+      <li><span class="n">5</span><strong>Adapter</strong><span>Action réversible</span></li>
+    </ol>
+
+    <noscript>
+      <p class="card" style="margin-bottom:14px">JavaScript est requis pour assembler mesures, hypothèses et action. Les données simulées restent lisibles dans <a href="data/session-simulee.json">data/session-simulee.json</a> et la discussion dans <a href="docs/discussion.md">docs/discussion.md</a>.</p>
+    </noscript>
+
+    <main id="contenu" class="grid">
+      <section class="card span-8" aria-labelledby="cas-titre">
+        <p class="kicker">Contexte</p>
+        <h2 id="cas-titre">Cas d’étude</h2>
+        <p>Résolution d’un problème — bureau, travail individuel — 21:07.</p>
+        <div class="meta-list">
+          <div class="row"><span>Individu</span><b>sim-001 · anonyme</b></div>
+          <div class="row"><span>Ligne de base cardiaque</span><b>68 bpm au repos</b></div>
+          <div class="row"><span>Durée sur la tâche</span><b>14 min</b></div>
+          <div class="row"><span>Finalité</span><b>adapter l’interface, session seulement</b></div>
+        </div>
+      </section>
+
+      <aside class="card span-4" aria-labelledby="controle-titre">
+        <p class="kicker">Contrôle</p>
+        <h2 id="controle-titre">L’humain tranche</h2>
+        <p>Le modèle propose. Il ne décide pas à votre place, et n’est pas un diagnostic.</p>
+        <p class="status" id="statut-controle" aria-live="polite">Aucune correction pour l’instant.</p>
+      </aside>
+
+      <section class="card span-12" aria-labelledby="langages-titre">
+        <p class="kicker mesure">Langages de l’humain</p>
+        <h2 id="langages-titre">Modalités collectées — minimisation</h2>
+        <p>Ce n’est pas une langue au sens strict : signes incarnés, ambigus, liés au contexte. Décochez ce qui n’est pas nécessaire : le modèle continue, avec plus d’incertitude.</p>
+        <div class="langues" id="langages"></div>
+        <p class="note" id="langages-note"></p>
+      </section>
+
+      <section class="card measure span-6" aria-labelledby="signaux-titre" data-kind="measure">
+        <p class="kicker mesure">Mesure · trait plein</p>
+        <h2 id="signaux-titre">Signaux observés</h2>
+        <p>Caractéristiques, pas de signal brut. Comparaison à la ligne de base.</p>
+        <div id="signaux"></div>
+      </section>
+
+      <section class="card infer span-6" aria-labelledby="etats-titre" data-kind="inference">
+        <p class="kicker infere">Inférence · hachuré</p>
+        <h2 id="etats-titre">États estimés</h2>
+        <p>Hypothèses non exclusives. Un même signal peut correspondre à plusieurs états.</p>
+        <div class="hypotheses" id="hypotheses" aria-live="polite"></div>
+        <div class="alts" id="alternatives"></div>
+      </section>
+
+      <section class="card span-12" aria-labelledby="temps-titre">
+        <p class="kicker infere">Temps</p>
+        <h2 id="temps-titre">Évolution T1 → maintenant</h2>
+        <p>Aire hachurée = intervalle d’incertitude. La ligne n’est pas une vérité intérieure.</p>
+        <div class="chart-wrap" id="chart"></div>
+        <div class="ticks" id="ticks"></div>
+      </section>
+
+      <section class="card span-7" aria-labelledby="action-titre" data-kind="action">
+        <p class="kicker">Action d’interface</p>
+        <h2 id="action-titre">Recommandation</h2>
+        <div id="action"></div>
+      </section>
+
+      <section class="card span-5" aria-labelledby="min-titre">
+        <p class="kicker mesure">Données</p>
+        <h2 id="min-titre">Minimisation</h2>
+        <div class="meta-list">
+          <div class="row"><span>Collecte</span><b>features de session</b></div>
+          <div class="row"><span>Brut ECG / EEG / audio</span><b>non conservé</b></div>
+          <div class="row"><span>Durée</span><b>session uniquement</b></div>
+          <div class="row"><span>Tiers / cookies</span><b>aucun</b></div>
+          <div class="row"><span>Décision à fort impact</span><b>interdite</b></div>
+        </div>
+        <p class="note">Accès, correction, refus de modalité : dans cette page. Pas un dossier médical.</p>
+      </section>
+
+      <section class="card span-12" aria-labelledby="repr-titre">
+        <p class="kicker">Représentation</p>
+        <h2 id="repr-titre">Modèle de l’observation</h2>
+        <p>Sépare données, hypothèses (avec confiance) et décision. C’est l’étape « se représenter l’objet » avant d’agir.</p>
+        <pre class="minijson" id="representation" tabindex="0"></pre>
+      </section>
+    </main>
+
+    <footer class="pied">
+      <span>Prototype conceptuel · recherche et design · ne constitue pas un diagnostic médical.</span>
+      <span>
+        <a href="docs/discussion.md">Discussion</a>
+        · <a href="docs/format-html.md">HTML</a>
+        · <a href="docs/incertitude.md">Incertitude</a>
+        · <a href="docs/minimisation.md">Minimisation</a>
+      </span>
+    </footer>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

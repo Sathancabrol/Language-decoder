@@ -1,0 +1,188 @@
+{
+  "meta": {
+    "version": "0.1.0",
+    "type": "simulation",
+    "prototype": true,
+    "diagnostic_medical": false,
+    "horodatage": "2026-08-30T21:07:00Z",
+    "fuseau": "UTC"
+  },
+  "individu": {
+    "id": "sim-001",
+    "anonyme": true,
+    "identite_collectee": false,
+    "ligne_de_base": {
+      "frequence_cardiaque_repos": 68,
+      "unite": "bpm",
+      "source": "auto-calibration simulée, moyenne de repos"
+    }
+  },
+  "contexte": {
+    "cas": "résolution d'un problème",
+    "environnement": "bureau, travail individuel",
+    "interaction_sociale": "faible",
+    "duree_tache_min": 14,
+    "charge_externe": "aucune contrainte physique déclarée"
+  },
+  "finalite": {
+    "usage": "adapter l'interface pendant la tâche",
+    "decisions_a_fort_impact": false,
+    "conservation": "session uniquement",
+    "brut_physiologique_conserve": false
+  },
+  "langages": [
+    {
+      "id": "cardio_features",
+      "label": "Cardio (caractéristiques)",
+      "categorie": "physiologique",
+      "collecte": true,
+      "necessaire": true,
+      "brut": false,
+      "justification": "Écart à la ligne de base, pas le tracé ECG."
+    },
+    {
+      "id": "comportement_tache",
+      "label": "Comportement de tâche",
+      "categorie": "comportemental",
+      "collecte": true,
+      "necessaire": true,
+      "brut": false,
+      "justification": "Durée, erreurs, pauses — déjà produites par l'interface."
+    },
+    {
+      "id": "respiration",
+      "label": "Respiration",
+      "categorie": "physiologique",
+      "collecte": false,
+      "necessaire": false,
+      "brut": false,
+      "justification": "Non nécessaire pour ce cas d'étude."
+    },
+    {
+      "id": "eeg_bci",
+      "label": "EEG / BCI",
+      "categorie": "neurophysiologique",
+      "collecte": false,
+      "necessaire": false,
+      "brut": false,
+      "justification": "Signal sensible, hors finalité actuelle."
+    },
+    {
+      "id": "parole_audio",
+      "label": "Parole (audio)",
+      "categorie": "langagier",
+      "collecte": false,
+      "necessaire": false,
+      "brut": false,
+      "justification": "Enregistrement vocal non requis."
+    },
+    {
+      "id": "video_visage",
+      "label": "Vidéo / visage",
+      "categorie": "comportemental",
+      "collecte": false,
+      "necessaire": false,
+      "brut": false,
+      "justification": "Donnée biométrique forte, écartée par minimisation."
+    }
+  ],
+  "signaux": {
+    "frequence_cardiaque": {
+      "valeur": 92,
+      "unite": "bpm",
+      "type": "feature",
+      "vs_baseline": "elevee",
+      "ecart_bpm": 24,
+      "qualite": 0.86,
+      "langue": "cardio_features"
+    },
+    "variabilite_cardiaque": {
+      "valeur": "diminution relative",
+      "unite": null,
+      "type": "feature",
+      "vs_baseline": "diminution",
+      "qualite": 0.74,
+      "langue": "cardio_features"
+    },
+    "temps_sur_tache": {
+      "valeur": 14,
+      "unite": "min",
+      "type": "comportement",
+      "qualite": 1,
+      "langue": "comportement_tache"
+    },
+    "erreurs_recentes": {
+      "valeur": 3,
+      "unite": "count",
+      "type": "comportement",
+      "qualite": 1,
+      "langue": "comportement_tache"
+    }
+  },
+  "hypotheses": [
+    {
+      "id": "charge_cognitive",
+      "etat": "charge cognitive élevée",
+      "confiance": 0.68,
+      "intervalle": [0.52, 0.79],
+      "exclusif": false,
+      "preuves": ["frequence_cardiaque", "variabilite_cardiaque", "temps_sur_tache", "erreurs_recentes"]
+    },
+    {
+      "id": "frustration",
+      "etat": "frustration possible",
+      "confiance": 0.42,
+      "intervalle": [0.21, 0.58],
+      "exclusif": false,
+      "preuves": ["erreurs_recentes", "temps_sur_tache"]
+    },
+    {
+      "id": "activation",
+      "etat": "activation physiologique modérée",
+      "confiance": 0.57,
+      "intervalle": [0.38, 0.71],
+      "exclusif": false,
+      "preuves": ["frequence_cardiaque", "variabilite_cardiaque"]
+    },
+    {
+      "id": "effort_physique",
+      "etat": "effort physique",
+      "confiance": 0.18,
+      "intervalle": [0.05, 0.31],
+      "exclusif": false,
+      "preuves": ["frequence_cardiaque"]
+    }
+  ],
+  "confiance_globale": {
+    "valeur": 0.72,
+    "intervalle": [0.58, 0.81],
+    "commentaire": "Confiance du modèle sur la représentation, pas une certitude sur l'état intérieur."
+  },
+  "alternatives": [
+    "effort physique",
+    "excitation",
+    "stress",
+    "peur",
+    "douleur",
+    "simple déplacement"
+  ],
+  "timeline": [
+    { "id": "T1", "label": "T1", "charge": 0.42, "lo": 0.28, "hi": 0.55 },
+    { "id": "T2", "label": "T2", "charge": 0.55, "lo": 0.4, "hi": 0.68 },
+    { "id": "T3", "label": "T3", "charge": 0.68, "lo": 0.52, "hi": 0.79 },
+    { "id": "T4", "label": "T4", "charge": 0.72, "lo": 0.54, "hi": 0.84 },
+    { "id": "now", "label": "Maintenant", "charge": 0.68, "lo": 0.52, "hi": 0.79 }
+  ],
+  "action_interface": {
+    "id": "aide_progressive",
+    "titre": "Proposer une aide progressive",
+    "detail": "Réduire la densité d'information, fractionner la tâche, laisser le choix à l'utilisateur.",
+    "declencheurs": [
+      "charge cognitive probable en hausse",
+      "trois erreurs récentes",
+      "temps sur tâche allongé par rapport au début"
+    ],
+    "proprietes": ["explicable", "reversible", "controle_utilisateur"],
+    "automatique_fort_impact": false
+  }
+}
