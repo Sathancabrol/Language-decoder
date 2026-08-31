@@ -22,3 +22,10 @@ Les visuels des dépôts [COGNITORIUM](https://github.com/Sathancabrol/COGNITORI
 | Jumeau qui lit l’esprit | Contredit HCSM |
 
 Proposition figée : `docs/proposition-interface.jpg`.
+
+HUD HCSM (K·E·I, métriques live, home, flux d’inférence) :
+
+- [`hud-hcsm-kei.jpg`](hud-hcsm-kei.jpg)
+- [`hud-accueil-utilisateur.jpg`](hud-accueil-utilisateur.jpg)
+- [`hud-flux-inferences.jpg`](hud-flux-inferences.jpg)
+- Structure : [`hud.md`](hud.md)

@@ -31,4 +31,5 @@ Les originaux ne sont jamais remplacés par la synthèse.
 Machine-readable : `data/session-simulee.json`, `data/memoire.json`, `data/monde-2040.json`, `data/ontology.json`.
 
 L’instrument live : [`outil-visualisation.md`](outil-visualisation.md).  
-Chrome issu des illustrations : [`illustrations.md`](illustrations.md) · [`proposition-interface.jpg`](proposition-interface.jpg).
+Chrome issu des illustrations : [`illustrations.md`](illustrations.md).  
+HUD K·E·I : [`hud.md`](hud.md) · [`hud-hcsm-kei.jpg`](hud-hcsm-kei.jpg).
