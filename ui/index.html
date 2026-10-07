@@ -3,44 +3,77 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Language Decoder — Profil humain décodé</title>
+  <title>Language Decoder — Moteur de Décodage Humain & Potentiel d'Action</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div id="app">
-    <header>
-      <div class="wordmark">LANGUAGE<span>·</span>DECODER</div>
-      <div class="breadcrumb">décodage de l'humain · <b id="source-title">—</b></div>
+    <!-- TOP STATUS BAR / HUD HEADER -->
+    <header class="hud-header">
+      <div class="brand-group">
+        <div class="wordmark">LANGUAGE<span>·</span>DECODER</div>
+        <div class="badge-hud live">HUD ACTIF · 0.0.0.0:9000</div>
+      </div>
+      <div class="header-center">
+        <span class="hud-tag">SUJET ACTIF</span>
+        <span class="subject-title" id="source-title">—</span>
+      </div>
+      <div class="header-right">
+        <span class="hud-metric-pill" id="meta-counts">Chargement...</span>
+      </div>
     </header>
 
+    <!-- NAVIGATION PAR ONGLETS AVEC ACCUEIL EN PREMIER -->
     <nav class="tabs">
-      <button class="tab active" data-view="overview">Vue d'ensemble</button>
-      <button class="tab" data-view="physical">Physique</button>
-      <button class="tab" data-view="mental">Mental</button>
-      <button class="tab" data-view="action">Capacité d'action</button>
-      <button class="tab" data-view="dynamics">Fonctionnement</button>
-      <button class="tab" data-view="trace">Traçabilité</button>
+      <button class="tab active" data-view="home"><span class="t-icon">🏠</span> Accueil & Principes (Schémas)</button>
+      <button class="tab" data-view="overview"><span class="t-icon">📊</span> Profil & Potentiel d'Action</button>
+      <button class="tab" data-view="physical"><span class="t-icon">🫀</span> Physique</button>
+      <button class="tab" data-view="mental"><span class="t-icon">🧠</span> Mental</button>
+      <button class="tab" data-view="action"><span class="t-icon">⚙️</span> Capacité d'action</button>
+      <button class="tab" data-view="dynamics"><span class="t-icon">⏱</span> Fonctionnement & ICF</button>
+      <button class="tab" data-view="trace"><span class="t-icon">🔍</span> Preuves & Traçabilité</button>
+      <button class="tab" data-view="kei_flow"><span class="t-icon">⚡</span> Flux Conceptuel K·E·I</button>
     </nav>
 
+    <!-- MAIN DYNAMIC CONTENT -->
     <main id="content" class="content"></main>
 
+    <!-- DECODE TERMINAL / ACTION DECODER -->
     <section class="decode-box">
-      <div class="decode-title">Décoder un humain</div>
+      <div class="decode-header-row">
+        <div>
+          <div class="decode-title">⚡ Tester le moteur : Décoder un profil en direct</div>
+          <div class="decode-subtitle">Injectez n'importe quel texte brut. Le moteur applique le schéma K·E·I, isole les preuves réelles et calcule le potentiel d'action.</div>
+        </div>
+        <div class="presets-group">
+          <span class="preset-label">Charger un exemple :</span>
+          <button class="btn-preset" data-preset="cordiste">Expert terrain (cordiste)</button>
+          <button class="btn-preset" data-preset="scientifique">Chercheur & data</button>
+          <button class="btn-preset" data-preset="stress">Opérateur sous pression</button>
+        </div>
+      </div>
+
       <textarea id="decode-input" rows="3"
-        placeholder="Collez un récit, un CV, une description de parcours ou d'expérience…">Ingénieur de recherche avec une très forte capacité d'analyse et de raisonnement. Il organise et anime des équipes pluridisciplinaires. Cordiste expérimenté, il possède une excellente condition physique et une grande endurance. Il apprend vite et transpose ses compétences d'un domaine à l'autre. Il gère mal le stress en situation de forte pression.</textarea>
+        placeholder="Collez un récit, un CV, une description de parcours ou d'expérience…">Ingénieur de recherche avec une très forte capacité d'analyse et de raisonnement. Il organise et anime des équipes pluridisciplinaires. Il maîtrise la programmation Python et la modélisation statistique. Cordiste expérimenté, il possède une excellente condition physique et une grande endurance, et travaille en hauteur en toute sécurité. Il apprend vite et transpose ses compétences d'un domaine à l'autre. Il gère mal le stress en situation de forte pression, mais il est très empathique et sait transmettre aux équipes.</textarea>
+      
       <div class="decode-actions">
-        <input id="decode-title" type="text" value="Décodage humain" placeholder="Titre du décodage">
-        <input id="decode-person" type="text" value="h-001" placeholder="Identifiant">
-        <button id="decode-btn">Décoder</button>
+        <input id="decode-title" type="text" value="Näthan Cabrol — profil optimisé" placeholder="Titre du décodage">
+        <input id="decode-person" type="text" value="h-bench" placeholder="Identifiant unique (ex: h-001)">
+        <button id="decode-btn">Décoder & Voir les Résultats</button>
       </div>
       <div class="decode-status" id="decode-status"></div>
     </section>
 
-    <footer>
-      <span>Moteur épistémique — level 5 (conclusion psychologique) jamais produit automatiquement.</span>
+    <!-- FOOTER HUD -->
+    <footer class="hud-footer">
+      <div class="footer-left">
+        <span class="hud-dot"></span>
+        <span><b>Moteur épistémique HCSM</b> — Garde-fous poppériens : L5 (diagnostic fermé) interdit. Auditabilité intégrale de la chaîne de preuve.</span>
+      </div>
       <span id="meta"></span>
     </footer>
   </div>
+
   <script src="app.js"></script>
 </body>
 </html>
