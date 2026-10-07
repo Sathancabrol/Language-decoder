@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Cognitorium Representation Engine — interface de visualisation live, chrome issu des illustrations Cognitorium.">
+  <meta name="description" content="Cognitorium Representation Engine — visualisation live. Chaque objet a un titre, un nom, une catégorie visuelle et un potentiel d’action.">
   <title>Cognitorium — Representation Engine</title>
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%2322d3ee' stroke-width='2'/%3E%3Cpath d='M10 16h3l2-5 3 10 2-5h2' fill='none' stroke='%2322d3ee' stroke-width='2'/%3E%3C/svg%3E">
@@ -16,92 +16,136 @@
         <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 16h3l2-5 3 10 2-5h2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
         <div>
           <strong>COGNITORIUM</strong>
-          <b>Representation</b>
+          <b>Ce que vous voyez</b>
         </div>
       </div>
+      <p class="side-lead">Outil de visualisation. Pas un diagnostic, pas une lecture de l’esprit.</p>
       <nav aria-label="Vues">
-        <button type="button" data-view="accueil">Accueil<small>Anneaux · synthèse</small></button>
-        <button type="button" data-view="cognition">Cognition<small>Langages · construits</small></button>
-        <button type="button" data-view="univers" aria-current="page">Univers<small>Constellation live</small></button>
-        <button type="button" data-view="signaux">Signaux<small>Features · pas de brut</small></button>
-        <button type="button" data-view="temps">Temps<small>Fan chart · T0</small></button>
+        <button type="button" data-view="accueil" aria-current="page">Accueil<small>Vue d’ensemble · anneaux</small></button>
+        <button type="button" data-view="cognition">Cognition<small>Corps · construits scientifiques</small></button>
+        <button type="button" data-view="univers">Univers<small>Carte des relations K·E·I</small></button>
+        <button type="button" data-view="signaux">Signaux<small>Mesures live · pas de brut</small></button>
+        <button type="button" data-view="temps">Temps<small>Évolution + incertitude</small></button>
       </nav>
+      <div class="legend-kei" aria-label="Catégories visuelles">
+        <p class="kicker">Catégories visuelles</p>
+        <button type="button" data-layer="K" aria-pressed="true">
+          <span class="swatch k">K</span>
+          <span><strong>Science</strong><small>Construit · nœud bleu</small></span>
+        </button>
+        <button type="button" data-layer="E" aria-pressed="true">
+          <span class="swatch e">E</span>
+          <span><strong>Preuves</strong><small>Feature · nœud teal</small></span>
+        </button>
+        <button type="button" data-layer="I" aria-pressed="true">
+          <span class="swatch i">I</span>
+          <span><strong>Inférences</strong><small>Conclusion · nœud ocre</small></span>
+        </button>
+      </div>
       <div class="side-foot">
-        <div class="layers" role="group" aria-label="Couches HCSM">
-          <button type="button" data-layer="K" aria-pressed="true">K</button>
-          <button type="button" data-layer="E" aria-pressed="true">E</button>
-          <button type="button" data-layer="I" aria-pressed="true">I</button>
-        </div>
-        <p>v0.3 · local · simulé<br><a href="docs/outil-visualisation.md">doc</a> · pas un générateur de code</p>
+        <label class="mode"><input type="checkbox" id="mode-expert"> Mode expert (JSON)</label>
+        <p>v0.4 · simulé · local<br><a href="docs/outil-visualisation.md">doc</a> · pas un générateur de code</p>
       </div>
     </aside>
 
     <header class="top">
-      <div>
-        <h1 id="view-title">Univers</h1>
-        <p class="sub" id="view-sub">Constellation knowledge · evidence · inference</p>
+      <div class="top-title">
+        <p class="kicker" id="view-cat">Catégorie visuelle · Vue d’ensemble</p>
+        <h1 id="view-title">Accueil</h1>
+        <p class="sub" id="view-sub">Nom · synthèse de session</p>
       </div>
-      <label class="search"><span class="sr">Filtrer</span><input id="q" type="search" placeholder="Filtrer un nœud…"></label>
+      <p class="top-act" id="view-act">Potentiel d’action · choisir une estimation à inspecter</p>
+      <label class="search"><span class="sr">Filtrer</span><input id="q" type="search" placeholder="Filtrer un nom…"></label>
       <div class="live" id="live" data-on="true"><i></i> LIVE</div>
       <div class="clock" id="clock">T0 + 00:00</div>
       <button type="button" class="primary" id="btn-play" aria-pressed="true">Pause</button>
+      <button type="button" class="ghost" id="btn-help" aria-haspopup="dialog" aria-controls="help">?</button>
     </header>
 
     <main class="stage" id="stage">
-      <section class="view" data-panel="accueil" hidden>
-        <div class="dash">
-          <div class="glass ring-card" id="ring-cov"></div>
-          <div class="glass ring-card" id="ring-conf"></div>
-          <div class="glass dash-graph">
-            <svg id="graph-mini" viewBox="0 0 640 280" role="img" aria-label="Mini constellation"></svg>
+      <div class="scene-bar" id="scene-bar"></div>
+      <div class="scene-body">
+        <section class="view" data-panel="accueil">
+          <div class="dash">
+            <div class="glass ring-card" id="ring-cov"></div>
+            <div class="glass ring-card" id="ring-conf"></div>
+            <div class="glass dash-graph">
+              <svg id="graph-mini" viewBox="0 0 640 280" role="img" aria-label="Mini carte des relations"></svg>
+            </div>
+            <div class="cards" id="est-cards"></div>
           </div>
-          <div class="cards" id="est-cards"></div>
-        </div>
-      </section>
-      <section class="view" data-panel="cognition" hidden>
-        <div class="cog-grid">
-          <div class="glass" id="cog-body"></div>
-          <div class="glass" id="cog-list"></div>
-        </div>
-      </section>
-      <section class="view" data-panel="univers">
-        <svg class="sky" id="graph" viewBox="0 0 1100 640" role="img" aria-label="Constellation live"></svg>
-        <div class="tip" id="tip" hidden></div>
-      </section>
-      <section class="view" data-panel="signaux" hidden>
-        <div class="wave-grid big" id="waves-big"></div>
-      </section>
-      <section class="view" data-panel="temps" hidden>
-        <div class="glass fan-full">
-          <h3 id="fan-title-full">Charge cognitive · incertitude dans le temps</h3>
-          <svg id="fan-full" viewBox="0 0 1000 280" role="img" aria-label="Fan chart"></svg>
-          <input type="range" id="scrub-full" min="0" max="0" value="0" aria-label="Parcourir le temps">
-        </div>
-      </section>
+        </section>
+        <section class="view" data-panel="cognition" hidden>
+          <div class="cog-grid">
+            <div class="glass" id="cog-body"></div>
+            <div class="glass" id="cog-list"></div>
+          </div>
+        </section>
+        <section class="view" data-panel="univers" hidden>
+          <svg class="sky" id="graph" viewBox="0 0 1100 640" role="img" aria-label="Carte des relations knowledge, evidence, inference"></svg>
+          <div class="tip" id="tip" hidden></div>
+        </section>
+        <section class="view" data-panel="signaux" hidden>
+          <div class="wave-grid big" id="waves-big"></div>
+        </section>
+        <section class="view" data-panel="temps" hidden>
+          <div class="glass fan-full">
+            <h3 id="fan-title-full">Charge cognitive · incertitude dans le temps</h3>
+            <svg id="fan-full" viewBox="0 0 1000 280" role="img" aria-label="Fan chart d’incertitude"></svg>
+            <input type="range" id="scrub-full" min="0" max="0" value="0" aria-label="Parcourir le temps">
+          </div>
+        </section>
+      </div>
     </main>
 
-    <aside class="insp">
+    <aside class="insp" aria-label="Inspecteur">
+      <div id="insp-fiche"></div>
       <div id="insp-est"></div>
+      <div id="insp-actions"></div>
       <div id="insp-langs"></div>
       <div id="insp-body"></div>
-      <div id="insp-json"></div>
+      <div id="insp-json" hidden></div>
     </aside>
 
     <footer class="strip">
       <div class="waves">
-        <h3>Signaux</h3>
+        <h3>Signaux · preuves (E) · sparkline</h3>
+        <p class="strip-act">Action · cliquer une courbe pour la lier à l’inférence</p>
         <div class="wave-grid" id="waves"></div>
       </div>
       <div class="fanbox">
-        <h3 id="fan-title">Fan chart</h3>
+        <h3 id="fan-title">Temps · fan chart</h3>
+        <p class="strip-act">Feature · bande = incertitude, trait = estimation</p>
         <svg id="fan" viewBox="0 0 520 150" role="img" aria-label="Incertitude temporelle"></svg>
       </div>
       <div class="scrub-wrap">
-        <input type="range" id="scrub" min="0" max="0" value="0" aria-label="Temps">
+        <p class="kicker">Potentiel d’action</p>
+        <input type="range" id="scrub" min="0" max="0" value="0" aria-label="Parcourir le temps">
         <span id="ctx">sim-001 · bureau</span>
       </div>
     </footer>
   </div>
+
+  <dialog class="help" id="help" aria-labelledby="help-title">
+    <form method="dialog">
+      <h2 id="help-title">Comment lire cet écran</h2>
+      <p>Chaque objet a <strong>quatre informations</strong>. C’est la même grille partout.</p>
+      <ol class="help-grid">
+        <li><strong>Titre</strong> — de quoi il s’agit, en une phrase.</li>
+        <li><strong>Nom</strong> — le nom précis (ex. Charge cognitive, FC).</li>
+        <li><strong>Catégorie visuelle</strong> — la famille et sa couleur.</li>
+        <li><strong>Features / action</strong> — ce que ça montre, ce que vous pouvez faire.</li>
+      </ol>
+      <ul class="help-cats">
+        <li><span class="swatch k">K</span> <strong>Science</strong> — ce que la recherche définit. Pas une personne.</li>
+        <li><span class="swatch e">E</span> <strong>Preuves</strong> — features observées. Pas le tracé brut.</li>
+        <li><span class="swatch i">I</span> <strong>Inférences</strong> — conclusion avec intervalle, ou refus.</li>
+        <li><span class="swatch rose">R</span> <strong>Refus</strong> — le modèle n’invente pas. Rose uniquement ici.</li>
+      </ul>
+      <p>Un pourcentage seul n’existe pas : toujours <strong>point + [bas–haut]</strong>. Vous tranchez : proposer une aide, ignorer, corriger, refuser.</p>
+      <button type="submit" class="primary">J’ai compris</button>
+    </form>
+  </dialog>
   <script src="js/dashboard.js"></script>
 </body>
 </html>

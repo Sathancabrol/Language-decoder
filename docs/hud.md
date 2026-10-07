@@ -41,6 +41,11 @@ Actions utilisateur : proposer une aide (réversible), ignorer, corriger. L’hu
 - Dock : Accueil · Cognition / graphe · Signaux · Temps · Système  
   Pas Métiers, pas inventaire, pas debuffs.
 
+## Lecture novice
+
+Toujours les quatre champs : **titre** · **nom** · **catégorie visuelle** · **features / potentiel d’action**.
+Couleurs : bleu K, teal E, ocre I, rose = refus seulement.
+
 ## 5. Affordance
 
 Verre sombre translucide. Cyan = donnée / structure. Teal = évidence. Ocre = inférence. Rose = refus ou réfutation seulement.

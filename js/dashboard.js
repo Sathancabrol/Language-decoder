@@ -6,11 +6,47 @@
   const MAX = 180;
   const TICK_MS = 280;
   const VIEWS = {
-    accueil: { titre: "Accueil", sub: "Anneaux de couverture et confiance — pas un score de personnalité" },
-    cognition: { titre: "Cognition", sub: "Langages collectés et construits estimés" },
-    univers: { titre: "Univers", sub: "Constellation knowledge · evidence · inference" },
-    signaux: { titre: "Signaux", sub: "Features en direct — aucun tracé brut" },
-    temps: { titre: "Temps", sub: "Quatrième dimension · fan chart d’incertitude" }
+    accueil: {
+      titre: "Accueil",
+      nom: "Synthèse de session",
+      cat: "Anneaux + cartes",
+      feat: "Couverture des langages et confiance avec intervalle — pas un score de personnalité",
+      act: "Choisir une estimation pour l’ouvrir à droite"
+    },
+    cognition: {
+      titre: "Cognition",
+      nom: "Langages du corps et construits",
+      cat: "Carte corporelle + listes",
+      feat: "Où le signe est collecté, ce que la science définit",
+      act: "Comparer un construit à ses preuves"
+    },
+    univers: {
+      titre: "Univers",
+      nom: "Carte des relations K · E · I",
+      cat: "Graphe (constellation)",
+      feat: "Bleu = science, teal = preuves, ocre = inférences",
+      act: "Cliquer un nœud pour lier toutes les vues"
+    },
+    signaux: {
+      titre: "Signaux",
+      nom: "Features en direct",
+      cat: "Sparklines",
+      feat: "Valeurs observées, aucun tracé brut (pas d’ECG)",
+      act: "Cliquer une courbe pour la lier à l’inférence"
+    },
+    temps: {
+      titre: "Temps",
+      nom: "Fan chart d’incertitude",
+      cat: "Bande temporelle",
+      feat: "Trait = estimation, hachures = intervalle",
+      act: "Pause, puis glisser le curseur pour relire T0"
+    }
+  };
+  const CAT = {
+    K: { lettre: "K", nom: "Science", cat: "Construit scientifique · nœud bleu", feat: "Ce que la recherche définit. Pas une personne.", act: "Cliquer pour voir comment on l’estime" },
+    E: { lettre: "E", nom: "Preuve", cat: "Feature observée · nœud teal", feat: "Mesure collectée, pas le brut.", act: "Allumer ou éteindre à droite (minimisation)" },
+    I: { lettre: "I", nom: "Inférence", cat: "Conclusion · nœud ocre", feat: "Point + intervalle, ou refus.", act: "Proposer une aide, ignorer, corriger, refuser" },
+    T0: { lettre: "T0", nom: "Maintenant", cat: "Instant de session · nœud cyan", feat: "Horloge T0, pas un profil.", act: "Pause ou curseur temporel en bas" }
   };
   const FALLBACK_ONTO = {
     constructs: [
@@ -34,7 +70,8 @@
   const S = {
     playing: true, cursor: 0, selected: "i-charge",
     layers: { K: true, E: true, I: true },
-    view: "univers", query: "",
+    view: "accueil", query: "", expert: false,
+    feedback: {},
     onto: FALLBACK_ONTO, channels: [], hist: [], timer: null
   };
 
@@ -53,6 +90,29 @@
   function matchQ(label) {
     if (!S.query) return true;
     return (label || "").toLowerCase().indexOf(S.query) >= 0;
+  }
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  function ficheHTML(titre, nom, cat, feat, act, compact) {
+    return '<dl class="fiche' + (compact ? " compact" : "") + '">' +
+      "<div><dt>Titre</dt><dd>" + esc(titre) + "</dd></div>" +
+      "<div><dt>Nom</dt><dd>" + esc(nom) + "</dd></div>" +
+      "<div><dt>Catégorie visuelle</dt><dd>" + esc(cat) + "</dd></div>" +
+      "<div><dt>Features / action</dt><dd>" + esc(feat) + (act ? " · " + esc(act) : "") + "</dd></div>" +
+      "</dl>";
+  }
+  function channelNom(c) {
+    const longs = { "FC": "Fréquence cardiaque", "HRV": "Variabilité cardiaque", "Temps tâche": "Temps sur la tâche", "Erreurs": "Erreurs de tâche" };
+    return longs[c.label] || c.label;
+  }
+  function layerOf(id) {
+    if (id === "t0") return "T0";
+    if (id && id.indexOf("k-") === 0) return "K";
+    if (id && id.indexOf("e-") === 0) return "E";
+    if (id && id.indexOf("i-") === 0) return "I";
+    return "I";
   }
 
   function infer(sample, on) {
@@ -205,10 +265,13 @@
       const dash = layer === "I" || off || refused ? " stroke-dasharray=\"4 3\"" : "";
       const r = layer === "T0" ? 18 : hot ? 14 : 10;
       const op = dim ? " opacity=\"0.2\"" : "";
-      return '<g class="node" data-id="' + id + '" data-label="' + label + '"' + op + ">" +
+      const badge = layer === "T0" ? "T0" : layer;
+      const ink = hot ? "#050814" : stroke;
+      return '<g class="node" data-id="' + id + '" data-label="' + esc(label) + '" data-layer="' + layer + '"' + op + ">" +
         '<circle cx="' + p.x + '" cy="' + p.y + '" r="' + (r + 6) + '" fill="' + stroke + '" opacity="0.12"/>' +
         '<circle cx="' + p.x + '" cy="' + p.y + '" r="' + r + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="2"' + dash + "/>" +
-        '<text x="' + p.x + '" y="' + (p.y + r + 14) + '" text-anchor="middle" fill="#cfe6f5" font-size="11">' + label + "</text></g>";
+        '<text x="' + p.x + '" y="' + (p.y + 4) + '" text-anchor="middle" fill="' + ink + '" font-size="9" font-family="ui-monospace,monospace">' + badge + "</text>" +
+        '<text x="' + p.x + '" y="' + (p.y + r + 14) + '" text-anchor="middle" fill="#cfe6f5" font-size="11">' + esc(label) + "</text></g>";
     }
 
     let nodes = node("t0", "T0", "T0");
@@ -234,11 +297,15 @@
         const tip = document.getElementById("tip");
         if (!tip) return;
         const id = g.getAttribute("data-id");
+        const layer = g.getAttribute("data-layer") || layerOf(id);
+        const meta = CAT[layer] || CAT.I;
         const est = n.estimates.filter(function (e) { return e.id === id; })[0];
-        let html = "<strong>" + g.getAttribute("data-label") + "</strong>";
-        if (est && est.status === "estimated") html += "<br>" + pct(est.p) + " % [" + pct(est.lo) + "–" + pct(est.hi) + "]";
-        if (est && est.status === "refused") html += "<br>Refusal · " + est.reason;
-        tip.innerHTML = html;
+        let feat = meta.feat;
+        if (est && est.status === "estimated") feat = pct(est.p) + " % [" + pct(est.lo) + "–" + pct(est.hi) + "] — intervalle, pas un trait";
+        if (est && est.status === "refused") feat = "Refusal · " + est.reason + " — le modèle n’invente pas";
+        const chOff = S.channels.filter(function (c) { return c.id === id; })[0];
+        if (chOff && !chOff.on) feat = "Canal éteint · pas collecté";
+        tip.innerHTML = ficheHTML(g.getAttribute("data-label"), meta.nom, meta.cat, feat, meta.act, true);
         tip.hidden = false;
         const r = svg.getBoundingClientRect();
         tip.style.left = (ev.clientX - r.left + 12) + "px";
@@ -265,10 +332,10 @@
 
   function waveKeys() {
     return [
-      { id: "e-hr", key: "hr", label: "FC", unit: "bpm" },
-      { id: "e-hrv", key: "hrv", label: "HRV", unit: "" },
-      { id: "e-temps", key: "temps", label: "Temps", unit: "s" },
-      { id: "e-erreurs", key: "errors", label: "Erreurs", unit: "" }
+      { id: "e-hr", key: "hr", titre: "Fréquence cardiaque", nom: "FC", unit: "bpm" },
+      { id: "e-hrv", key: "hrv", titre: "Variabilité cardiaque", nom: "HRV", unit: "" },
+      { id: "e-temps", key: "temps", titre: "Temps sur la tâche", nom: "Temps", unit: "s" },
+      { id: "e-erreurs", key: "errors", titre: "Erreurs de tâche", nom: "Erreurs", unit: "" }
     ];
   }
 
@@ -285,7 +352,9 @@
       box.className = "wave";
       box.dataset.sel = rel.has(k.id) ? "true" : "false";
       const val = last == null ? "off" : (k.key === "hrv" ? last.toFixed(2) : String(Math.round(last * 10) / 10));
-      box.innerHTML = '<div class="meta"><span>' + k.label + "</span><b>" + val + (on && k.unit ? " " + k.unit : "") + "</b></div>" +
+      box.title = "Catégorie visuelle · Preuve (E) · sparkline. Action · cliquer pour lier.";
+      box.innerHTML = '<div class="meta"><span>' + k.titre + "<small>" + k.nom + " · preuve (E)</small></span><b>" +
+        val + (on && k.unit ? " " + k.unit : "") + "</b></div>" +
         '<svg viewBox="0 0 240 ' + h + '">' + (on ? spark(series, 240, h, "#2dd4bf") : "") + "</svg>";
       box.addEventListener("click", function () { S.selected = k.id; draw(); });
       root.appendChild(box);
@@ -331,7 +400,7 @@
 
   function ringSVG(value, label, sub, color) {
     const r = 52, c = 2 * Math.PI * r, dash = c * clamp(value, 0, 1);
-    return '<svg viewBox="0 0 140 140" width="140" height="140">' +
+    return '<svg viewBox="0 0 140 140" width="112" height="112">' +
       '<circle cx="70" cy="70" r="' + r + '" fill="none" stroke="#1c2740" stroke-width="10"/>' +
       '<circle cx="70" cy="70" r="' + r + '" fill="none" stroke="' + color + '" stroke-width="10" stroke-linecap="round" ' +
       'stroke-dasharray="' + dash + " " + c + '" transform="rotate(-90 70 70)"/>' +
@@ -379,10 +448,10 @@
       });
       return;
     }
-    let html = '<div class="block"><p class="kicker">Langages</p><div class="langs">';
+    let html = '<div class="block"><p class="kicker">Preuves (E) · allumer / éteindre</p><p>Moins de preuves → intervalle plus large, ou refus.</p><div class="langs">';
     S.channels.forEach(function (c) {
       html += '<label class="lang" data-ch="' + c.id + '" data-on="' + c.on + '"><input type="checkbox" data-ch="' + c.id + '"' +
-        (c.on ? " checked" : "") + "> <span><strong>" + c.label + "</strong><small>" + c.slot + "</small></span></label>";
+        (c.on ? " checked" : "") + "> <span><strong>" + channelNom(c) + "</strong><small>Nom · " + c.label + " · " + c.slot + "</small></span></label>";
     });
     html += "</div></div>";
     root.innerHTML = html;
@@ -400,36 +469,85 @@
     });
   }
 
+  function feedbackOf(id) {
+    return S.feedback[id] || null;
+  }
+
+  function drawActions(est) {
+    const root = document.getElementById("insp-actions");
+    if (!root) return;
+    const id = est ? est.id : S.selected;
+    const fb = feedbackOf(id);
+    const sig = id + ":" + (fb || "");
+    if (root.dataset.sig === sig) return;
+    root.dataset.sig = sig;
+    root.innerHTML =
+      '<div class="block"><p class="kicker">Potentiel d’action</p>' +
+      (fb === "propose" ? '<p class="note-user">Aide proposée : alléger la tâche (explicable, réversible). Rien n’est automatique.</p>' : "") +
+      (fb === "ignore" ? '<p class="note-user">Vous ignorez cette estimation pour l’instant.</p>' : "") +
+      (fb === "correct" ? '<p class="note-user">Vous avez indiqué : ça ne correspond pas. L’humain tranche.</p>' : "") +
+      (fb === "refuse" ? '<p class="note-user">Vous refusez d’estimer. Le modèle n’invente pas.</p>' : "") +
+      '<div class="actions">' +
+      '<button type="button" data-fb="propose"' + (fb === "propose" ? ' aria-pressed="true"' : "") + ">Proposer une aide<small>Explicable et réversible — vous décidez</small></button>" +
+      '<button type="button" data-fb="ignore"' + (fb === "ignore" ? ' aria-pressed="true"' : "") + ">Ignorer<small>Ne rien changer à l’interface</small></button>" +
+      '<button type="button" data-fb="correct"' + (fb === "correct" ? ' aria-pressed="true"' : "") + ">Corriger<small>Ça ne correspond pas / je ne sais pas</small></button>" +
+      '<button type="button" data-kind="refuse" data-fb="refuse"' + (fb === "refuse" ? ' aria-pressed="true"' : "") + ">Refuser d’estimer<small>Pas assez de preuves, ne pas inventer</small></button>" +
+      "</div></div>";
+    root.querySelectorAll("[data-fb]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        const kind = b.getAttribute("data-fb");
+        S.feedback[id] = S.feedback[id] === kind ? null : kind;
+        drawActions(est);
+      });
+    });
+  }
+
   function drawInsp() {
     const pack = currentEstimate();
     const n = pack.n, est = pack.est, k = pack.k;
     if (!n) return;
-    let html = '<div class="block"><p class="kicker">ConstructEstimate</p><h2>' + (k ? k.label : "Observation") + "</h2>";
-    if (!est) html += "<p>Sélectionnez un nœud.</p>";
+    const layer = layerOf(S.selected);
+    const meta = CAT[layer] || CAT.I;
+    const titre = k ? k.label : (S.selected === "t0" ? "Instant T0" : "Observation");
+    const feat = !est ? "Sélectionnez un nœud sur la carte."
+      : est.status === "refused" ? "Refusal · " + est.reason + " — le modèle n’invente pas"
+      : pct(est.p) + " % [" + pct(est.lo) + "–" + pct(est.hi) + "] · point + intervalle";
+    document.getElementById("insp-fiche").innerHTML =
+      ficheHTML(titre, meta.nom, meta.cat, feat, meta.act, false);
+
+    let html = '<div class="block">';
+    if (!est) html += "<p>Cliquez un cercle au centre pour inspecter.</p>";
     else if (est.status === "refused") html += '<div class="refus">Refusal · ' + est.reason + " — le modèle n’invente pas.</div>";
     else {
       html += '<div class="row"><span>Estimation</span><b class="ci">' + pct(est.p) + " % · [" + pct(est.lo) + "–" + pct(est.hi) + "]</b></div>";
       html += piste(est.p, est.lo, est.hi);
-      html += "<p>Preuves : " + (est.evid.join(", ") || "aucune") + ".</p>";
-      html += '<div class="alts">Concurrentes : ' + est.alts.join(" · ") + "</div>";
+      html += "<p>Preuves (E) : " + (est.evid.map(function (id) {
+        const c = S.channels.filter(function (x) { return x.id === id; })[0];
+        return c ? c.label : id;
+      }).join(", ") || "aucune") + ".</p>";
+      html += '<div class="alts">Autres lectures possibles : ' + est.alts.join(" · ") + "</div>";
     }
     html += "</div>";
     document.getElementById("insp-est").innerHTML = html;
+    drawActions(est);
     drawLangs();
     const body = document.getElementById("insp-body");
     if (!body.dataset.ready) {
-      body.innerHTML = '<div class="block"><p class="kicker">Carte des signes</p>' + bodyMap() +
+      body.innerHTML = '<div class="block"><p class="kicker">Catégorie · carte des signes</p>' + bodyMap() +
         "<p>Allumé = collecté. Pas un jumeau mental.</p></div>";
       body.dataset.ready = "1";
     }
-    document.getElementById("insp-json").innerHTML =
-      '<div class="block"><p class="kicker">Objet HCSM</p><pre class="json">' + JSON.stringify({
+    const jsonBox = document.getElementById("insp-json");
+    jsonBox.hidden = !S.expert;
+    jsonBox.innerHTML =
+      '<div class="block"><p class="kicker">Objet HCSM (expert)</p><pre class="json">' + JSON.stringify({
         construct: est && est.k,
         value: est && est.status === "estimated" ? Number(est.p.toFixed(2)) : null,
         uncertainty: est && est.status === "estimated" ? [Number(est.lo.toFixed(2)), Number(est.hi.toFixed(2))] : null,
         evidence_ids: est ? est.evid : [],
         temporal_window: "T0+" + n.t + "s",
         status: est ? est.status : "none",
+        user_action: feedbackOf(est && est.id),
         simulation: true,
         diagnostic_medical: false
       }, null, 2) + "</pre></div>";
@@ -440,10 +558,12 @@
     if (!n) return;
     const on = S.channels.filter(function (c) { return c.on; }).length;
     const glob = n.estimates.filter(function (e) { return e.id === "i-charge"; })[0];
-    document.getElementById("ring-cov").innerHTML = ringSVG(on / S.channels.length, on + "/" + S.channels.length, "langages", "#22d3ee");
+    document.getElementById("ring-cov").innerHTML = ringSVG(on / S.channels.length, on + "/" + S.channels.length, "langages", "#22d3ee") +
+      '<p class="kicker">Titre · Couverture</p><p>Nom · langages collectés<br>Catégorie · anneau cyan<br>Action · allumer / éteindre à droite</p>';
     const conf = glob && glob.status === "estimated" ? glob.p : 0;
     const sub = glob && glob.status === "estimated" ? "[" + pct(glob.lo) + "–" + pct(glob.hi) + "]" : "refus";
-    document.getElementById("ring-conf").innerHTML = ringSVG(conf, glob && glob.status === "estimated" ? pct(conf) + "%" : "—", "confiance " + sub, "#2dd4bf");
+    document.getElementById("ring-conf").innerHTML = ringSVG(conf, glob && glob.status === "estimated" ? pct(conf) + "%" : "—", "confiance " + sub, "#2dd4bf") +
+      '<p class="kicker">Titre · Confiance</p><p>Nom · charge cognitive (I)<br>Catégorie · anneau teal · intervalle<br>Action · pas un trait de personnalité</p>';
     drawConstellation(document.getElementById("graph-mini"), 640, 280);
     const cards = document.getElementById("est-cards");
     cards.replaceChildren();
@@ -453,19 +573,20 @@
       el.type = "button";
       el.className = "est-card";
       el.dataset.on = S.selected === est.id ? "true" : "false";
-      el.innerHTML = "<div>" + (lab ? lab.label : est.id) + "</div><b>" +
-        (est.status === "estimated" ? pct(est.p) + "% [" + pct(est.lo) + "–" + pct(est.hi) + "]" : "Refusal") + "</b>";
+      const nom = lab ? lab.label : est.id;
+      const feat = est.status === "estimated" ? pct(est.p) + "% [" + pct(est.lo) + "–" + pct(est.hi) + "]" : "Refusal · " + est.reason;
+      el.innerHTML = ficheHTML(nom, "Inférence (I)", "Carte ocre · point + intervalle", feat, "Ouvrir à droite", true);
       el.addEventListener("click", function () { S.selected = est.id; draw(); });
       cards.appendChild(el);
     });
   }
 
   function drawCognition() {
-    document.getElementById("cog-body").innerHTML = "<p class=\"kicker\">Langages</p>" + bodyMap() +
-      "<p>Points cyan = collecté. Les lobes des illustrations Cognitorium ne sont pas des scores.</p>";
+    document.getElementById("cog-body").innerHTML = ficheHTML("Carte des signes", "Langages du corps", "Silhouette + points teal", "Allumé = collecté", "Pas un jumeau mental", true) + bodyMap() +
+      "<p>Points teal = preuve collectée. Les lobes des illustrations Cognitorium ne sont pas des scores.</p>";
     const list = document.getElementById("cog-list");
     const n = now();
-    let html = '<p class="kicker">Construits à T0</p>';
+    let html = ficheHTML("Construits à T0", "Ce que la science définit (K)", "Liste + piste d’intervalle", "Chaque ligne est une inférence (I)", "Comparer à l’inspecteur à droite", true);
     n.estimates.forEach(function (est) {
       const lab = S.onto.constructs.filter(function (k) { return k.id === est.k; })[0];
       html += "<h2>" + (lab ? lab.label : est.id) + "</h2>";
@@ -486,7 +607,11 @@
     });
     const meta = VIEWS[id];
     document.getElementById("view-title").textContent = meta.titre;
-    document.getElementById("view-sub").textContent = meta.sub;
+    document.getElementById("view-cat").textContent = "Catégorie visuelle · " + meta.cat;
+    document.getElementById("view-sub").textContent = "Nom · " + meta.nom;
+    document.getElementById("view-act").textContent = "Potentiel d’action · " + meta.act;
+    const bar = document.getElementById("scene-bar");
+    if (bar) bar.innerHTML = ficheHTML(meta.titre, meta.nom, meta.cat, meta.feat, meta.act, true);
   }
 
   function drawChrome() {
@@ -533,9 +658,25 @@
       if (r.ok) S.onto = await r.json();
     } catch (e) { /* file:// */ }
     seedWalk();
-    showView("univers");
+    showView("accueil");
     draw();
     playLoop();
+
+    const help = document.getElementById("help");
+    const btnHelp = document.getElementById("btn-help");
+    if (btnHelp && help) {
+      btnHelp.addEventListener("click", function () {
+        if (typeof help.showModal === "function") help.showModal();
+        else help.setAttribute("open", "");
+      });
+    }
+    const expert = document.getElementById("mode-expert");
+    if (expert) {
+      expert.addEventListener("change", function () {
+        S.expert = expert.checked;
+        drawInsp();
+      });
+    }
 
     document.getElementById("btn-play").addEventListener("click", function () {
       S.playing = !S.playing;

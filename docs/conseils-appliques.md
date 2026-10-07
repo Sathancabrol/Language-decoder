@@ -36,6 +36,7 @@ Chaque remarque de la discussion est reliée à un geste concret. Rien n’est l
 | L’humain décide l’éthique (Sarah 14:00) | Action d’interface réversible + lecture des cartes 2040 |
 | Caméras urbaines / auth cardiaque | Lignes rouges dans Horizons (cyber, villes) |
 | HUD Cognitorium | Sidebar, verre, teal, radar de couverture — `docs/design-visuel.md` |
+| Utilisateur novice | Titre, nom, catégorie visuelle, features/action sur chaque vue, nœud, carte et inspecteur ; bouton `?` |
 | Refus des scores de traits à 82 % | Radar = modalités on/off, jamais « résilience cognitive » |
 
 ## Ce que le prototype refuse volontairement
