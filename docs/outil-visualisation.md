@@ -29,6 +29,7 @@ Toujours les mêmes données, liées (brushing) :
 | Radar de couverture | minimisation | ce qui est collecté, pas un profil de traits |
 | Carte des langages | spatiale du corps | d’où vient le signe, pas un jumeau mental |
 | Inspecteur | 0D + provenance | `ConstructEstimate` HCSM |
+| Home | pédagogie | but + schémas K→E→I + carte de l’écran + outils cliquables |
 | Légende novice | lecture | chaque objet : titre, nom, catégorie visuelle, action |
 
 ## Ce qu’il ne montre pas

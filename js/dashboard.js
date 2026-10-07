@@ -6,9 +6,16 @@
   const MAX = 180;
   const TICK_MS = 280;
   const VIEWS = {
+    home: {
+      titre: "Home",
+      nom: "Page d’accueil",
+      cat: "Schémas + cartes d’outils",
+      feat: "But de l’instrument et outils disponibles, expliqués simplement",
+      act: "Lire les schémas, puis ouvrir un outil"
+    },
     accueil: {
-      titre: "Accueil",
-      nom: "Synthèse de session",
+      titre: "Session",
+      nom: "Synthèse live",
       cat: "Anneaux + cartes",
       feat: "Couverture des langages et confiance avec intervalle — pas un score de personnalité",
       act: "Choisir une estimation pour l’ouvrir à droite"
@@ -70,7 +77,7 @@
   const S = {
     playing: true, cursor: 0, selected: "i-charge",
     layers: { K: true, E: true, I: true },
-    view: "accueil", query: "", expert: false,
+    view: "home", query: "", expert: false,
     feedback: {},
     onto: FALLBACK_ONTO, channels: [], hist: [], timer: null
   };
@@ -599,7 +606,10 @@
   }
 
   function showView(id) {
+    if (!VIEWS[id]) return;
     S.view = id;
+    const app = document.querySelector(".app");
+    if (app) app.classList.toggle("is-home", id === "home");
     document.querySelectorAll("[data-panel]").forEach(function (p) { p.hidden = p.getAttribute("data-panel") !== id; });
     document.querySelectorAll(".side nav button").forEach(function (b) {
       if (b.getAttribute("data-view") === id) b.setAttribute("aria-current", "page");
@@ -658,9 +668,16 @@
       if (r.ok) S.onto = await r.json();
     } catch (e) { /* file:// */ }
     seedWalk();
-    showView("accueil");
+    showView("home");
     draw();
     playLoop();
+
+    document.querySelectorAll("[data-go]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        showView(b.getAttribute("data-go"));
+        draw();
+      });
+    });
 
     const help = document.getElementById("help");
     const btnHelp = document.getElementById("btn-help");
@@ -702,7 +719,7 @@
         draw();
       });
     });
-    document.querySelectorAll(".side nav [data-view]").forEach(function (b) {
+    document.querySelectorAll("[data-view]").forEach(function (b) {
       b.addEventListener("click", function () {
         showView(b.getAttribute("data-view"));
         draw();

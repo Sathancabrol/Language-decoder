@@ -10,18 +10,19 @@
 </head>
 <body>
   <a class="skip" href="#stage">Aller à la scène</a>
-  <div class="app">
+  <div class="app is-home">
     <aside class="side">
-      <div class="logo">
+      <button type="button" class="logo" id="btn-logo" data-view="home" title="Page d’accueil">
         <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 16h3l2-5 3 10 2-5h2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
         <div>
           <strong>COGNITORIUM</strong>
-          <b>Ce que vous voyez</b>
+          <b>Page d’accueil</b>
         </div>
-      </div>
+      </button>
       <p class="side-lead">Outil de visualisation. Pas un diagnostic, pas une lecture de l’esprit.</p>
       <nav aria-label="Vues">
-        <button type="button" data-view="accueil" aria-current="page">Accueil<small>Vue d’ensemble · anneaux</small></button>
+        <button type="button" data-view="home" aria-current="page">Home<small>But · schémas · outils</small></button>
+        <button type="button" data-view="accueil">Session<small>Vue d’ensemble live</small></button>
         <button type="button" data-view="cognition">Cognition<small>Corps · construits scientifiques</small></button>
         <button type="button" data-view="univers">Univers<small>Carte des relations K·E·I</small></button>
         <button type="button" data-view="signaux">Signaux<small>Mesures live · pas de brut</small></button>
@@ -54,18 +55,163 @@
         <h1 id="view-title">Accueil</h1>
         <p class="sub" id="view-sub">Nom · synthèse de session</p>
       </div>
-      <p class="top-act" id="view-act">Potentiel d’action · choisir une estimation à inspecter</p>
+      <p class="top-act" id="view-act">Potentiel d’action · lire les schémas, puis ouvrir un outil</p>
       <label class="search"><span class="sr">Filtrer</span><input id="q" type="search" placeholder="Filtrer un nom…"></label>
       <div class="live" id="live" data-on="true"><i></i> LIVE</div>
       <div class="clock" id="clock">T0 + 00:00</div>
       <button type="button" class="primary" id="btn-play" aria-pressed="true">Pause</button>
+      <button type="button" class="home-btn" id="btn-home" data-view="home">Home</button>
       <button type="button" class="ghost" id="btn-help" aria-haspopup="dialog" aria-controls="help">?</button>
     </header>
 
     <main class="stage" id="stage">
       <div class="scene-bar" id="scene-bar"></div>
       <div class="scene-body">
-        <section class="view" data-panel="accueil">
+        <section class="view home" data-panel="home">
+          <div class="home-scroll">
+            <header class="home-hero glass">
+              <p class="kicker">Titre · Page d’accueil · Nom · Cognitorium</p>
+              <h2>Voir sans inventer</h2>
+              <p>Cet outil <strong>affiche</strong> des mesures et des estimations en direct. Il ne lit pas dans la tête. Il ne pose pas de diagnostic. S’il manque des preuves, il <strong>refuse</strong> plutôt que d’inventer.</p>
+              <div class="home-cta">
+                <button type="button" class="primary" data-go="accueil">Ouvrir la session live</button>
+                <button type="button" class="ghost wide" data-go="univers">Voir la carte K · E · I</button>
+              </div>
+            </header>
+
+            <figure class="schema glass">
+              <figcaption>
+                <span>Titre · But</span>
+                <span>Nom · Flux K → E → I</span>
+                <span>Catégorie · schéma de flux</span>
+                <span>Action · suivre les flèches, de gauche à droite</span>
+              </figcaption>
+              <svg viewBox="0 0 760 168" role="img" aria-labelledby="schema-but-title schema-but-desc">
+                <title id="schema-but-title">But de l’outil : science, puis preuves, puis inférence ou refus</title>
+                <desc id="schema-but-desc">Trois cases reliées par des flèches. K science, E preuves observées, I conclusion avec intervalle ou refus.</desc>
+                <rect x="8" y="28" width="200" height="112" rx="14" fill="#0b1220" stroke="#60a5fa"/>
+                <text x="108" y="58" text-anchor="middle" fill="#60a5fa" font-size="18" font-weight="700">K</text>
+                <text x="108" y="82" text-anchor="middle" fill="#e8f4ff" font-size="14">Science</text>
+                <text x="108" y="104" text-anchor="middle" fill="#7f93b3" font-size="11">ce que la recherche définit</text>
+                <text x="108" y="122" text-anchor="middle" fill="#7f93b3" font-size="11">pas une personne</text>
+                <path d="M216 84 H248" stroke="#7f93b3" stroke-width="2" marker-end="url(#arr)"/>
+                <rect x="256" y="28" width="200" height="112" rx="14" fill="#0b1220" stroke="#2dd4bf"/>
+                <text x="356" y="58" text-anchor="middle" fill="#2dd4bf" font-size="18" font-weight="700">E</text>
+                <text x="356" y="82" text-anchor="middle" fill="#e8f4ff" font-size="14">Preuves</text>
+                <text x="356" y="104" text-anchor="middle" fill="#7f93b3" font-size="11">features observées</text>
+                <text x="356" y="122" text-anchor="middle" fill="#7f93b3" font-size="11">pas le tracé brut</text>
+                <path d="M464 84 H496" stroke="#7f93b3" stroke-width="2" marker-end="url(#arr)"/>
+                <rect x="504" y="28" width="248" height="112" rx="14" fill="#0b1220" stroke="#e4b15a"/>
+                <text x="628" y="58" text-anchor="middle" fill="#e4b15a" font-size="18" font-weight="700">I</text>
+                <text x="628" y="82" text-anchor="middle" fill="#e8f4ff" font-size="14">Inférence ou refus</text>
+                <text x="628" y="104" text-anchor="middle" fill="#7f93b3" font-size="11">point + [bas–haut]</text>
+                <text x="628" y="122" text-anchor="middle" fill="#fb7185" font-size="11">rose = on n’invente pas</text>
+                <defs>
+                  <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                    <path d="M0 0 L10 5 L0 10 z" fill="#7f93b3"/>
+                  </marker>
+                </defs>
+              </svg>
+            </figure>
+
+            <figure class="schema glass">
+              <figcaption>
+                <span>Titre · Où ça se passe</span>
+                <span>Nom · Carte de l’écran</span>
+                <span>Catégorie · schéma de layout</span>
+                <span>Action · repérer les 5 zones, puis cliquer un outil</span>
+              </figcaption>
+              <svg viewBox="0 0 760 200" role="img" aria-labelledby="schema-ui-title">
+                <title id="schema-ui-title">Carte de l’écran : vues à gauche, scène au centre, inspecteur à droite, signaux en bas</title>
+                <rect x="8" y="12" width="120" height="176" rx="10" fill="#0b1220" stroke="#22d3ee"/>
+                <text x="68" y="36" text-anchor="middle" fill="#22d3ee" font-size="11">Vues</text>
+                <text x="68" y="56" text-anchor="middle" fill="#7f93b3" font-size="10">Home</text>
+                <text x="68" y="74" text-anchor="middle" fill="#7f93b3" font-size="10">Session</text>
+                <text x="68" y="92" text-anchor="middle" fill="#7f93b3" font-size="10">Cognition</text>
+                <text x="68" y="110" text-anchor="middle" fill="#7f93b3" font-size="10">Univers</text>
+                <text x="68" y="128" text-anchor="middle" fill="#7f93b3" font-size="10">Signaux</text>
+                <text x="68" y="146" text-anchor="middle" fill="#7f93b3" font-size="10">Temps</text>
+                <rect x="140" y="12" width="420" height="120" rx="10" fill="#0b1220" stroke="#60a5fa"/>
+                <text x="350" y="48" text-anchor="middle" fill="#60a5fa" font-size="12">Scène</text>
+                <text x="350" y="70" text-anchor="middle" fill="#e8f4ff" font-size="13">ce que vous regardez</text>
+                <text x="350" y="92" text-anchor="middle" fill="#7f93b3" font-size="11">graphe · corps · courbes · temps</text>
+                <rect x="572" y="12" width="180" height="120" rx="10" fill="#0b1220" stroke="#e4b15a"/>
+                <text x="662" y="48" text-anchor="middle" fill="#e4b15a" font-size="12">Inspecteur</text>
+                <text x="662" y="70" text-anchor="middle" fill="#e8f4ff" font-size="12">vous décidez</text>
+                <text x="662" y="92" text-anchor="middle" fill="#7f93b3" font-size="11">aide · ignorer</text>
+                <text x="662" y="110" text-anchor="middle" fill="#7f93b3" font-size="11">corriger · refuser</text>
+                <rect x="140" y="144" width="612" height="44" rx="10" fill="#0b1220" stroke="#2dd4bf"/>
+                <text x="446" y="172" text-anchor="middle" fill="#2dd4bf" font-size="12">Bandeau · preuves live + incertitude dans le temps</text>
+              </svg>
+            </figure>
+
+            <section>
+              <p class="kicker">Titre · Outils disponibles · Catégorie · cartes cliquables · Action · ouvrir l’outil</p>
+              <div class="tool-grid">
+                <button type="button" class="tool glass" data-go="accueil">
+                  <svg viewBox="0 0 64 40" aria-hidden="true"><circle cx="20" cy="20" r="12" fill="none" stroke="#22d3ee" stroke-width="3"/><circle cx="48" cy="20" r="12" fill="none" stroke="#2dd4bf" stroke-width="3"/></svg>
+                  <strong>Session</strong>
+                  <small>Anneaux de couverture et confiance avec intervalle.</small>
+                </button>
+                <button type="button" class="tool glass" data-go="cognition">
+                  <svg viewBox="0 0 64 40" aria-hidden="true"><circle cx="32" cy="10" r="6" fill="none" stroke="#2dd4bf"/><path d="M20 38 V22 H44 V38" fill="none" stroke="#2dd4bf"/></svg>
+                  <strong>Cognition</strong>
+                  <small>Où le signe est pris sur le corps, et les construits scientifiques.</small>
+                </button>
+                <button type="button" class="tool glass" data-go="univers">
+                  <svg viewBox="0 0 64 40" aria-hidden="true"><circle cx="32" cy="20" r="4" fill="#22d3ee"/><circle cx="12" cy="10" r="3" fill="none" stroke="#60a5fa"/><circle cx="52" cy="12" r="3" fill="none" stroke="#2dd4bf"/><circle cx="44" cy="32" r="3" fill="none" stroke="#e4b15a"/><path d="M32 20 L12 10 M32 20 L52 12 M32 20 L44 32" stroke="#1c2a44"/></svg>
+                  <strong>Univers</strong>
+                  <small>Carte des relations : science, preuves, inférences.</small>
+                </button>
+                <button type="button" class="tool glass" data-go="signaux">
+                  <svg viewBox="0 0 64 40" aria-hidden="true"><path d="M4 28 L16 12 L28 22 L40 8 L52 24 L60 16" fill="none" stroke="#2dd4bf" stroke-width="2"/></svg>
+                  <strong>Signaux</strong>
+                  <small>Features en direct. Pas de tracé brut (pas d’ECG).</small>
+                </button>
+                <button type="button" class="tool glass" data-go="temps">
+                  <svg viewBox="0 0 64 40" aria-hidden="true"><path d="M4 32 L16 20 L32 24 L48 10 L60 16 L60 32 Z" fill="#e4b15a" opacity=".35"/><path d="M4 28 L16 18 L32 22 L48 12 L60 18" fill="none" stroke="#2dd4bf" stroke-width="2"/></svg>
+                  <strong>Temps</strong>
+                  <small>Fan chart : le trait est l’estimation, la bande est l’incertitude.</small>
+                </button>
+              </div>
+            </section>
+
+            <figure class="schema glass">
+              <figcaption>
+                <span>Titre · Comment lire</span>
+                <span>Nom · Grille à 4 champs</span>
+                <span>Catégorie · schéma d’étiquette</span>
+                <span>Action · chercher ces 4 mots sur chaque objet</span>
+              </figcaption>
+              <svg viewBox="0 0 760 110" role="img" aria-labelledby="schema-read-title">
+                <title id="schema-read-title">Chaque objet a un titre, un nom, une catégorie visuelle et un potentiel d’action</title>
+                <rect x="8" y="16" width="174" height="78" rx="12" fill="#0b1220" stroke="#22d3ee"/>
+                <text x="95" y="48" text-anchor="middle" fill="#22d3ee" font-size="12">TITRE</text>
+                <text x="95" y="70" text-anchor="middle" fill="#e8f4ff" font-size="11">de quoi il s’agit</text>
+                <rect x="198" y="16" width="174" height="78" rx="12" fill="#0b1220" stroke="#60a5fa"/>
+                <text x="285" y="48" text-anchor="middle" fill="#60a5fa" font-size="12">NOM</text>
+                <text x="285" y="70" text-anchor="middle" fill="#e8f4ff" font-size="11">le nom précis</text>
+                <rect x="388" y="16" width="174" height="78" rx="12" fill="#0b1220" stroke="#2dd4bf"/>
+                <text x="475" y="48" text-anchor="middle" fill="#2dd4bf" font-size="12">CATÉGORIE</text>
+                <text x="475" y="70" text-anchor="middle" fill="#e8f4ff" font-size="11">couleur + forme</text>
+                <rect x="578" y="16" width="174" height="78" rx="12" fill="#0b1220" stroke="#e4b15a"/>
+                <text x="665" y="48" text-anchor="middle" fill="#e4b15a" font-size="12">ACTION</text>
+                <text x="665" y="70" text-anchor="middle" fill="#e8f4ff" font-size="11">ce que vous faites</text>
+              </svg>
+            </figure>
+
+            <aside class="home-not glass">
+              <p class="kicker">Ce que cet outil n’est pas</p>
+              <ul>
+                <li>Pas un diagnostic médical</li>
+                <li>Pas une lecture de l’esprit ni un jumeau intérieur</li>
+                <li>Pas un score unique de personnalité</li>
+                <li>Pas un générateur de code (autre outil, plus tard)</li>
+              </ul>
+            </aside>
+          </div>
+        </section>
+        <section class="view" data-panel="accueil" hidden>
           <div class="dash">
             <div class="glass ring-card" id="ring-cov"></div>
             <div class="glass ring-card" id="ring-conf"></div>

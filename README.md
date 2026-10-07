@@ -29,7 +29,7 @@ Ouvrir `http://localhost:8080`. Espace = lecture / pause.
 | Carte des signes | D’où vient le langage, pas un avatar de l’âme |
 | Langages on/off | Minimisation : moins de preuves → intervalle plus large ou `Refusal` |
 
-Chaque objet à l’écran a **titre, nom, catégorie visuelle, potentiel d’action**. Bouton `?` = mode d’emploi. Accueil d’abord.
+**Home** (bouton toujours visible) explique le but avec des schémas, puis les outils. Chaque objet a **titre, nom, catégorie visuelle, potentiel d’action**. Bouton `?` = mode d’emploi.
 
 Cliquer un nœud **lie** toutes les vues. Couches K, E, I dans le rail : masquer sans détruire.
 
